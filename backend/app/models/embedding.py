@@ -2,7 +2,7 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from pgvector.vector import Vector
+from pgvector.sqlalchemy import Vector
 
 from app.db.database import Base
 
