@@ -6,6 +6,7 @@ class Settings(BaseSettings):
   SUPABASE_URL: str
   SUPABASE_KEY: str
 
+  HF_API_URL: str
   HF_API_KEY: str
 
   model_config = SettingsConfigDict(
