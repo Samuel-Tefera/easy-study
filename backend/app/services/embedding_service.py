@@ -12,6 +12,25 @@ class EmbeddingService:
     }
 
     @classmethod
+    def embed_query(cls, text: str) -> list[float]:
+        response = requests.post(
+            settings.HF_API_URL,
+            headers=cls.headers,
+            json={"inputs": text, "options": {"wait_for_model": True}},
+            timeout=60
+        )
+
+        if response.status_code != 200:
+            raise Exception(f"HF Error: {response.text}")
+
+        vector = response.json()
+
+        if isinstance(vector, list) and len(vector) > 0 and isinstance(vector[0], list):
+            return vector[0]
+
+        return vector
+
+    @classmethod
     def create_embeddings(cls, db: Session, chunks: List[dict], batch_size: int = 20) -> None:
         for i in range(0, len(chunks), batch_size):
             batch = chunks[i : i + batch_size]
