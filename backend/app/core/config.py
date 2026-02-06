@@ -9,6 +9,10 @@ class Settings(BaseSettings):
   HF_API_URL: str
   HF_API_KEY: str
 
+  LLM_API_URL: str
+  LLM_MODEL: str
+  LLM_API_KEY: str
+
   model_config = SettingsConfigDict(
       env_file=".env",
       env_file_encoding='utf-8',
