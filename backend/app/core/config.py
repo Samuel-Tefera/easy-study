@@ -13,6 +13,9 @@ class Settings(BaseSettings):
   LLM_MODEL: str
   LLM_API_KEY: str
 
+  GOOGLE_CLIENT_ID: str
+  GOOGLE_CLIENT_SECRET: str
+
   model_config = SettingsConfigDict(
       env_file=".env",
       env_file_encoding='utf-8',
