@@ -1,11 +1,18 @@
 import uuid
 
-from sqlalchemy import Column, ForeignKey, Index, Integer, String,  DateTime, func
+import enum
+
+from sqlalchemy import Column, ForeignKey, Index, Integer, String,  DateTime, Enum, func
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 
 from app.db.database import Base
 
+
+class DocumentStatus(enum.Enum):
+    processing = "processing"
+    ready = "ready"
+    failed = "failed"
 
 class Document(Base):
   __tablename__ = "documents"
@@ -28,6 +35,12 @@ class Document(Base):
   created_at = Column(
     DateTime(timezone=True),
     server_default=func.now(),
+    nullable=False
+  )
+
+  status = Column(
+    Enum(DocumentStatus),
+    default=DocumentStatus.processing,
     nullable=False
   )
 
