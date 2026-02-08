@@ -16,6 +16,14 @@ class Settings(BaseSettings):
   GOOGLE_CLIENT_ID: str
   GOOGLE_CLIENT_SECRET: str
 
+  JWT_SECRET_KEY: str
+  JWT_ALGORITHM: str
+  ACCESS_TOKEN_EXPIRE_MINUTES: str
+
+  GOOGLE_TOKEN_URL: str
+
+  FRONTEND_CALLBACK_URL: str
+
   model_config = SettingsConfigDict(
       env_file=".env",
       env_file_encoding='utf-8',
