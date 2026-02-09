@@ -46,3 +46,6 @@ class StorageService:
             self.bucket.remove([filename])
         except Exception as e:
             raise RuntimeError(f"Delete failed: {str(e)}")
+
+
+storage_service = StorageService()
