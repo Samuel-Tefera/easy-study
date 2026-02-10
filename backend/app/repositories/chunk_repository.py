@@ -52,9 +52,6 @@ class ChunkRepository:
         db: Session,
         document_id: UUID,
     ) -> int:
-        """
-        Returns number of deleted rows
-        """
         deleted = (
             db.query(Chunk)
             .filter(Chunk.document_id == document_id)

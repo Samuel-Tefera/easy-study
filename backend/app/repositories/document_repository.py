@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 
 from app.models.document import Document
-from app.models.document import DocumentStatus
 
 
 class DocumentRepository:
