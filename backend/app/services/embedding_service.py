@@ -11,7 +11,9 @@ from app.models.chunk import Chunk
 
 class EmbeddingService:
     headers = {
-        "Authorization": f"Bearer {settings.HF_API_KEY}"
+        "Authorization": f"Bearer {settings.HF_API_KEY}",
+        "X-Wait-For-Model": "true",
+        "Content-Type": "application/json"
     }
 
     @classmethod
@@ -19,12 +21,12 @@ class EmbeddingService:
         response = requests.post(
             settings.HF_API_URL,
             headers=cls.headers,
-            json={"inputs": text, "options": {"wait_for_model": True}},
+            json={"inputs": text},
             timeout=60
         )
 
         if response.status_code != 200:
-            raise Exception(f"HF Error: {response.text}")
+            raise Exception(f"HF Query Error: {response.status_code} - {response.text}")
 
         vector = response.json()
 
@@ -47,23 +49,27 @@ class EmbeddingService:
                     last_response = requests.post(
                         settings.HF_API_URL,
                         headers=cls.headers,
-                        json={"inputs": texts, "options": {"wait_for_model": True}},
-                        timeout=60
+                        json={"inputs": texts},
+                        timeout=90
                     )
+
                     if last_response.status_code == 200:
                         all_vectors = last_response.json()
                         break
+
+                    print(f"Attempt {attempt + 1} failed with status {last_response.status_code}")
                 except Exception as e:
-                    print(f"Attempt {attempt + 1} failed: {e}")
+                    print(f"Attempt {attempt + 1} connection error: {e}")
 
-                time.sleep(2)
+                time.sleep(3)
 
-            if not all_vectors or (last_response and last_response.status_code != 200):
-                error_msg = last_response.text if last_response else "No response"
+            if not all_vectors:
+                error_msg = last_response.text if last_response is not None else "Connection Timeout/No Response"
                 raise Exception(f"Failed to process batch at index {i}: {error_msg}")
 
-            if isinstance(all_vectors[0], list) and isinstance(all_vectors[0][0], list):
-                all_vectors = [v[0] for v in all_vectors]
+            if isinstance(all_vectors, list) and len(all_vectors) > 0 and isinstance(all_vectors[0], list):
+                if isinstance(all_vectors[0][0], list):
+                    all_vectors = [v[0] for v in all_vectors]
 
             vectors_to_save = [
                 {"chunk_id": batch[j].id, "vector": all_vectors[j]}
