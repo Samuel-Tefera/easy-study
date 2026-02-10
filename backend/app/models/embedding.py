@@ -15,6 +15,6 @@ class Embedding(Base):
     ForeignKey("chunks.id"),
     primary_key=True
   )
-  vector = Column(Vector(768), nullable=False)
+  vector = Column(Vector(384), nullable=False)
 
   chunk = relationship("Chunk", back_populates="embedding")
