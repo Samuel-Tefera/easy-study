@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.db.database import get_db
 from app.api import auth, user
+from app.api import document
 
 app = FastAPI()
 
@@ -21,6 +22,7 @@ app.add_middleware(
 
 app.include_router(router=auth.router, prefix="/api")
 app.include_router(router=user.router, prefix="/api")
+app.include_router(router=document.router, prefix="/api")
 
 @app.get("/")
 def health_check():
