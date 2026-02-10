@@ -12,11 +12,6 @@ class ChunkRepository:
         document_id: UUID,
         chunks: List[str],
     ) -> List[Chunk]:
-        """
-        Inserts multiple chunks efficiently.
-        `chunks` is a list of chunk texts in order.
-        """
-
         chunk_objects = [
             Chunk(
                 document_id=document_id,
