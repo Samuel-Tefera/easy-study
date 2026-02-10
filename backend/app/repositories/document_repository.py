@@ -43,7 +43,7 @@ class DocumentRepository:
 
         document.status = status
         db.commit()
-        db.refresh()
+        db.refresh(document)
 
     @staticmethod
     def delete_document(db: Session, document_id: UUID) -> bool:
