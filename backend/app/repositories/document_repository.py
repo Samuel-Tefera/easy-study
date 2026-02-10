@@ -1,6 +1,9 @@
 from sqlalchemy.orm import Session
+
 from uuid import UUID
+
 from app.models.document import Document
+from app.models.document import DocumentStatus
 
 
 class DocumentRepository:
@@ -31,6 +34,17 @@ class DocumentRepository:
     @staticmethod
     def get_documents_by_user(db: Session, user_id: UUID) -> list[Document]:
         return db.query(Document).filter(Document.user_id == user_id).all()
+
+    @staticmethod
+    def update_document_status(db: Session, document_id: UUID, status: str) -> None:
+        document = db.query(Document).filter(Document.id == document_id).first()
+
+        if not document:
+            raise ValueError(f"Document with id {document_id} not found")
+
+        document.status = status
+        db.commit()
+        db.refresh()
 
     @staticmethod
     def delete_document(db: Session, document_id: UUID) -> bool:
