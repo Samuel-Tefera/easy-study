@@ -1,8 +1,11 @@
 import tempfile
+
 import mimetypes
-from typing import List
-from app.core.config import settings
+
 from supabase import create_client, Client
+
+from app.core.config import settings
+from app.utils.utils import extract_path_from_supabase_url
 
 class StorageService:
     def __init__(self, bucket: str = "documents"):
@@ -46,6 +49,20 @@ class StorageService:
             self.bucket.remove([filename])
         except Exception as e:
             raise RuntimeError(f"Delete failed: {str(e)}")
+
+    def create_signed_url_from_full_url(self, file_url: str, expires_in: int = 300) -> str:
+        file_path = extract_path_from_supabase_url(file_url)
+
+        response = self.bucket.create_signed_url(file_path, expires_in)
+
+        signed = response.get("signedURL")
+        if not signed:
+            raise RuntimeError("Failed to generate signed URL")
+
+        if signed.startswith("http"):
+            return signed
+
+        return f"{settings.SUPABASE_URL}{signed}"
 
 
 storage_service = StorageService()
