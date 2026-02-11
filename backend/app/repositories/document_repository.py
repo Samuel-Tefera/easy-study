@@ -32,7 +32,7 @@ class DocumentRepository:
 
     @staticmethod
     def get_documents_by_user(db: Session, user_id: UUID) -> list[Document]:
-        return db.query(Document).filter(Document.user_id == user_id).all()
+        return db.query(Document).filter(Document.user_id == user_id).order_by(Document.created_at.desc()).all()
 
     @staticmethod
     def update_document_status(db: Session, document_id: UUID, status: str) -> None:
