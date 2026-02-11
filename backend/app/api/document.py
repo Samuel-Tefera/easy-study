@@ -1,5 +1,7 @@
-from fastapi import APIRouter, UploadFile, Depends, File, BackgroundTasks
+from fastapi import APIRouter, HTTPException, UploadFile, Depends, File, BackgroundTasks
+
 from sqlalchemy.orm import Session
+
 from uuid import UUID
 
 from app.models.user import User
@@ -69,5 +71,24 @@ def get_documents(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user)
 ):
-    documents = db.query(Document).filter(Document.user_id == user.id).order_by(Document.created_at.desc()).all()
+    documents = DocumentRepository.get_documents_by_user(db, user.id)
     return documents
+
+@router.get("/{document_id}/view-url")
+def get_document_view_url(
+    document_id: UUID,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    document = DocumentRepository.get_document_by_id(db, document_id)
+
+    if not document:
+        raise HTTPException(status_code=404, detail="Document not found")
+
+    if document.user_id != user.id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    signed_url = storage_service.create_signed_url_from_full_url(document.file_url)
+
+    return {"url": signed_url}
+
