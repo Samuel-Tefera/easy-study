@@ -11,7 +11,7 @@ from app.repositories.document_repository import DocumentRepository
 from app.services.document_service import DocumentService
 from app.services.chunking_service import ChunkingService
 from app.repositories.chunk_repository import ChunkRepository
-from app.models.document import DocumentStatus
+from app.models.document import DocumentStatus, Document
 from app.schemas.document import DocumentOut
 from app.services.embedding_service import EmbeddingService
 
@@ -63,3 +63,11 @@ async def upload_document(
     )
 
     return document
+
+@router.get("/", response_model=list[DocumentOut])
+def get_documents(
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    documents = db.query(Document).filter(Document.user_id == user.id).order_by(Document.created_at.desc()).all()
+    return documents
