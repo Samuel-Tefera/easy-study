@@ -65,3 +65,23 @@ def get_document_view_url(
 
     return {"url": signed_url}
 
+
+@router.delete("/{document_id}")
+def delete_document(
+    document_id: UUID,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    document = DocumentRepository.get_document_by_id(db, document_id)
+
+    if not document:
+        raise HTTPException(status_code=404, detail="Document not found")
+
+    if not document.user_id == user.id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    storage_service.delete_file(document.filename)
+
+    if DocumentRepository.delete_document(db, document_id):
+        return {"message": "Document and all related data deleted"}
+
