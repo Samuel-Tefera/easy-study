@@ -25,3 +25,4 @@ class User(Base):
   )
 
   documents = relationship("Document", back_populates="user", cascade="all, delete")
+  ai_interactions = relationship("AIInteraction", back_populates="user", cascade="all, delete-orphan")

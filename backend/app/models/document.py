@@ -46,5 +46,7 @@ class Document(Base):
 
   user = relationship("User", back_populates="documents")
   chunks = relationship("Chunk", back_populates="document", cascade="all, delete")
+  ai_interactions = relationship("AIInteraction", back_populates="document", cascade="all, delete-orphan")
+
 
 Index("ix_documents_user_id", Document.user_id)
