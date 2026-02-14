@@ -5,6 +5,8 @@ from urllib.parse import urlparse
 from uuid import UUID
 from sqlalchemy.orm import Session
 
+from pathlib import Path
+
 from app.services.document_service import DocumentService
 from app.services.chunking_service import ChunkingService
 from app.repositories.chunk_repository import ChunkRepository
@@ -68,3 +70,10 @@ def extract_path_from_supabase_url(file_url: str) -> str:
     object_path = "/".join(path_parts[bucket_index + 1 :])
 
     return object_path
+
+def load_highlight_prompt(action: str) -> str:
+    app_root = Path(__file__).parent.parent
+    file_path = app_root / "prompts" / "highlight" / f"{action}.md"
+
+    with open(file_path, "r", encoding="utf-8") as f:
+        return f.read()
