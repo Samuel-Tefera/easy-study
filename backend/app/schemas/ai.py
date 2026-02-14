@@ -13,7 +13,7 @@ class AIHighlightRequest(BaseModel):
 
 
 class AIHighlightResponse(BaseModel):
-  interaction_id: uuid.UUID
+  id: uuid.UUID
   document_id: uuid.UUID
 
   input_text: str
