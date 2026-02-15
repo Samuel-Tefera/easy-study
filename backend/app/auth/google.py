@@ -8,13 +8,14 @@ from app.core.config import settings
 
 async def exchange_code_for_tokens(
     code: str,
-    code_verifier: str | None = None
+    code_verifier: str | None = None,
+    redirect_uri: str = "postmessage"
   ):
   data = {
     "code": code,
     "client_id": settings.GOOGLE_CLIENT_ID,
     "client_secret": settings.GOOGLE_CLIENT_SECRET,
-    "redirect_uri": settings.FRONTEND_CALLBACK_URL,
+    "redirect_uri": redirect_uri,
     "grant_type": "authorization_code",
   }
 

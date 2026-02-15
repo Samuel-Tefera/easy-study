@@ -9,8 +9,9 @@ async def google_login(
     db: Session,
     code: str,
     code_verifier: str | None = None,
+    redirect_uri: str = "postmessage"
   ):
-  tokens = await exchange_code_for_tokens(code, code_verifier)
+  tokens = await exchange_code_for_tokens(code, code_verifier, redirect_uri)
   google_id_token = tokens.get("id_token")
 
   if not google_id_token:

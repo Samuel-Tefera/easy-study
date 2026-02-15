@@ -19,6 +19,7 @@ async def login_with_google(
       db,
       code=body.code,
       code_verifier=body.code_verifier,
+      redirect_uri=body.redirect_uri or "postmessage",
     )
     return result
   except Exception as e:
