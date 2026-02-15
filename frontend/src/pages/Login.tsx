@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useEffect } from 'react';
+import { BookOpen } from 'lucide-react';
+import { Button } from '../components/ui';
 
 const Login: React.FC = () => {
     const { login, isAuthenticated, isLoading } = useAuth();
@@ -13,31 +15,51 @@ const Login: React.FC = () => {
     }, [isAuthenticated, navigate]);
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
-            <div className="p-8 bg-white rounded-lg shadow-md w-96 text-center">
-                <h1 className="text-2xl font-bold mb-6 text-gray-800">Welcome to Easy Study</h1>
-                <p className="text-gray-600 mb-8">Sign in to continue to your dashboard</p>
+        <div className="flex items-center justify-center min-h-screen bg-background">
+            <div className="w-full max-w-sm mx-4 animate-fade-in-up">
+                {/* Logo */}
+                <div className="flex flex-col items-center mb-8">
+                    <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-primary text-primary-foreground mb-4 shadow-glow">
+                        <BookOpen className="w-6 h-6" />
+                    </div>
+                    <h1 className="text-2xl font-semibold text-foreground tracking-tight">
+                        Welcome to Easy Study
+                    </h1>
+                    <p className="text-sm text-muted-foreground mt-2 text-center">
+                        Your AI-powered document tutor. Sign in to get started.
+                    </p>
+                </div>
 
-                <button
-                    onClick={() => login()}
-                    disabled={isLoading}
-                    className={`w-full flex items-center justify-center gap-3 px-4 py-2 border border-blue-500 rounded text-blue-500 hover:bg-blue-50 transition-colors ${
-                        isLoading ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
-                >
-                    {isLoading ? (
-                        <span>Signing in...</span>
-                    ) : (
-                        <>
-                            <img
-                                src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-                                alt="Google logo"
-                                className="w-6 h-6"
-                            />
-                            <span>Sign in with Google</span>
-                        </>
-                    )}
-                </button>
+                {/* Card */}
+                <div className="bg-surface border border-border rounded-xl p-6 shadow-card">
+                    <Button
+                        variant="outline"
+                        size="lg"
+                        onClick={() => login()}
+                        isLoading={isLoading}
+                        className="w-full"
+                        icon={
+                            !isLoading ? (
+                                <img
+                                    src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                                    alt="Google"
+                                    className="w-5 h-5"
+                                />
+                            ) : undefined
+                        }
+                    >
+                        {isLoading ? 'Signing in…' : 'Sign in with Google'}
+                    </Button>
+
+                    <p className="text-xs text-muted-foreground text-center mt-4 leading-relaxed">
+                        By signing in, you agree to our Terms of Service and Privacy Policy.
+                    </p>
+                </div>
+
+                {/* Footer */}
+                <p className="text-xs text-muted-foreground/40 text-center mt-6">
+                    © {new Date().getFullYear()} Easy Study
+                </p>
             </div>
         </div>
     );
