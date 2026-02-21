@@ -27,6 +27,16 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <AppLayout>{children}</AppLayout>;
 };
 
+/* ── Protected Route (No Layout — full-screen) ── */
+const ProtectedRouteNoLayout = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) return <LoadingScreen />;
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+
+  return <>{children}</>;
+};
+
 /* ── Routes ── */
 function AppRoutes() {
   return (
@@ -41,11 +51,11 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/study/:documentId"
+        path="/study/:id"
         element={
-          <ProtectedRoute>
+          <ProtectedRouteNoLayout>
             <StudyRoom />
-          </ProtectedRoute>
+          </ProtectedRouteNoLayout>
         }
       />
     </Routes>

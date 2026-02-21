@@ -1,5 +1,39 @@
 @import "tailwindcss";
+@import "react-pdf/dist/Page/TextLayer.css";
+@import "react-pdf/dist/Page/AnnotationLayer.css";
 @config "../tailwind.config.js";
+
+/* ── PDF Viewer Styles ── */
+.react-pdf__Page {
+  position: relative;
+  margin: 0 auto;
+}
+
+.react-pdf__Page canvas {
+  display: block;
+  margin: 0 auto;
+}
+
+/* Ensure text layer overlays the canvas */
+.react-pdf__Page__textContent {
+  position: absolute !important;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.3;
+  line-height: 1;
+}
+
+.react-pdf__Page__textContent span {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  transform-origin: 0 0;
+}
+
+/* Selection highlight colour */
+.react-pdf__Page__textContent ::selection {
+  background: rgba(99, 102, 241, 0.35);
+}
 
 /* ── Base Styles ── */
 @layer base {
