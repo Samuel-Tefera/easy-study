@@ -117,6 +117,10 @@ export default {
           '0%':   { transform: 'rotate(0deg)' },
           '100%': { transform: 'rotate(360deg)' },
         },
+        'scale-in': {
+          '0%':   { opacity: '0', transform: 'scale(0.95) translateY(4px)' },
+          '100%': { opacity: '1', transform: 'scale(1) translateY(0)' },
+        },
       },
 
       animation: {
@@ -125,6 +129,7 @@ export default {
         'slide-in-right': 'slide-in-right 0.3s ease-out',
         'skeleton':       'skeleton 1.8s ease-in-out infinite',
         'spin-slow':      'spin-slow 1.2s linear infinite',
+        'scale-in':       'scale-in 0.15s ease-out',
       },
     },
   },
