@@ -7,6 +7,8 @@ import {
   Search,
   Clock,
   MoreHorizontal,
+  X,
+  AlertCircle,
 } from 'lucide-react';
 import {
   Button,
@@ -37,35 +39,91 @@ const Dashboard: React.FC = () => {
   const [isLoadingDocs, setIsLoadingDocs] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchDocuments = async () => {
-      try {
-        setErrorMsg(null);
-        setIsLoadingDocs(true);
-        const data = await documentService.getDocuments();
-        setDocuments(data);
-      } catch (error) {
-        console.error('Failed to fetch documents', error);
-        if (axios.isAxiosError(error)) {
-          // Handle authentication errors
-          if (error.response?.status === 401 || error.response?.status === 403) {
-            logout(); // Delete from local storage and update context
-            navigate('/login');   // Redirect to login
-            return;
-          }
-          // Handle other server errors
-          setErrorMsg(error.response?.data?.detail || 'Failed to load your documents. Please try again later.');
-        } else {
-          // Handle network or unexpected errors
-          setErrorMsg('An unexpected error occurred while fetching your documents.');
-        }
-      } finally {
-        setIsLoadingDocs(false);
-      }
-    };
+  /* ── Upload State ── */
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
+  // Fetch documents on load
+  const fetchDocuments = async () => {
+    try {
+      setErrorMsg(null);
+      setIsLoadingDocs(true);
+      const data = await documentService.getDocuments();
+      setDocuments(data);
+    } catch (error) {
+      console.error('Failed to fetch documents', error);
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          logout();
+          navigate('/login');
+          return;
+        }
+        setErrorMsg(error.response?.data?.detail || 'Failed to load your documents. Please try again later.');
+      } else {
+        setErrorMsg('An unexpected error occurred while fetching your documents.');
+      }
+    } finally {
+      setIsLoadingDocs(false);
+    }
+  };
+
+  useEffect(() => {
     fetchDocuments();
   }, [navigate]);
+
+  /* ── Handles File Selection ── */
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUploadError(null);
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+      setUploadError('Please select a valid PDF file.');
+      return;
+    }
+
+    if (file.size > 50 * 1024 * 1024) { // 50MB limit
+      setUploadError('File is too large. Maximum size is 50MB.');
+      return;
+    }
+
+    setSelectedFile(file);
+  };
+
+  /* ── Handles File Upload Submission ── */
+  const handleUploadSubmit = async () => {
+    if (!selectedFile) return;
+
+    try {
+      setIsUploading(true);
+      setUploadError(null);
+      await documentService.uploadDocument(selectedFile);
+
+      // Cleanup and refresh list
+      setSelectedFile(null);
+      setUploadModalOpen(false);
+      await fetchDocuments();
+
+    } catch (error) {
+      console.error('Upload failed', error);
+      if (axios.isAxiosError(error)) {
+         setUploadError(error.response?.data?.detail || 'Failed to upload document. Please try again.');
+      } else {
+         setUploadError('An unexpected error occurred during upload.');
+      }
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleModalClose = () => {
+    if (isUploading) return;
+    setUploadModalOpen(false);
+    setSelectedFile(null);
+    setUploadError(null);
+  };
 
   const filteredDocs = documents.filter((doc) =>
     doc.filename.toLowerCase().includes(searchQuery.toLowerCase())
@@ -184,7 +242,7 @@ const Dashboard: React.FC = () => {
       )}
 
       {/* ── Upload Modal ── */}
-      <Modal open={uploadModalOpen} onClose={() => setUploadModalOpen(false)}>
+      <Modal open={uploadModalOpen} onClose={handleModalClose}>
         <ModalHeader>
           <ModalTitle>Upload Document</ModalTitle>
           <ModalDescription>
@@ -192,24 +250,80 @@ const Dashboard: React.FC = () => {
           </ModalDescription>
         </ModalHeader>
 
-        {/* Drop zone */}
-        <div className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary/40 hover:bg-primary-light/50 transition-colors duration-200 cursor-pointer">
-          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-surface-elevated mx-auto mb-3">
-            <Upload className="w-5 h-5 text-muted-foreground" />
-          </div>
-          <p className="text-sm font-medium text-foreground mb-1">
-            Drop your PDF here
-          </p>
-          <p className="text-xs text-muted-foreground">
-            or click to browse • PDF up to 50MB
-          </p>
+        <div className="space-y-4">
+          {/* Error Message */}
+          {uploadError && (
+             <div className="flex items-start gap-2 p-3 text-sm text-red-500 bg-red-500/10 border border-red-500/20 rounded-lg">
+               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+               <p>{uploadError}</p>
+             </div>
+          )}
+
+          {/* Hidden File Input */}
+          <input
+            type="file"
+            accept=".pdf,application/pdf"
+            className="hidden"
+            ref={fileInputRef}
+            onChange={handleFileSelect}
+            disabled={isUploading}
+          />
+
+          {!selectedFile ? (
+            /* Drop zone */
+            <div
+               onClick={() => !isUploading && fileInputRef.current?.click()}
+               className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary/40 hover:bg-primary-light/50 transition-colors duration-200 cursor-pointer"
+            >
+              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-surface-elevated mx-auto mb-3">
+                <Upload className="w-5 h-5 text-muted-foreground" />
+              </div>
+              <p className="text-sm font-medium text-foreground mb-1">
+                Click to browse for a PDF
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Maximum file size: 50MB
+              </p>
+            </div>
+          ) : (
+            /* Selected File State */
+            <div className="flex items-center justify-between p-4 border border-border rounded-xl bg-surface-elevated">
+              <div className="flex items-center gap-3 overflow-hidden">
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-light shrink-0">
+                  <FileText className="w-5 h-5 text-accent-foreground" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate" title={selectedFile.name}>
+                    {selectedFile.name}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => !isUploading && setSelectedFile(null)}
+                disabled={isUploading}
+                className="p-2 text-muted-foreground hover:text-red-500 hover:bg-red-500/10 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Remove file"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
         </div>
 
         <ModalFooter>
-          <Button variant="secondary" onClick={() => setUploadModalOpen(false)}>
+          <Button variant="secondary" onClick={handleModalClose} disabled={isUploading}>
             Cancel
           </Button>
-          <Button disabled>Upload</Button>
+          <Button
+             onClick={handleUploadSubmit}
+             disabled={!selectedFile || isUploading}
+             isLoading={isUploading}
+          >
+            {isUploading ? 'Uploading...' : 'Upload PDF'}
+          </Button>
         </ModalFooter>
       </Modal>
     </div>
