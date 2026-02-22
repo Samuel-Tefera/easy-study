@@ -19,7 +19,6 @@
   position: absolute !important;
   inset: 0;
   overflow: hidden;
-  opacity: 0.3;
   line-height: 1;
 }
 
@@ -32,7 +31,8 @@
 
 /* Selection highlight colour */
 .react-pdf__Page__textContent ::selection {
-  background: rgba(99, 102, 241, 0.35);
+  background: rgba(99, 102, 241, 0.4);
+  color: transparent;
 }
 
 /* ── Base Styles ── */
