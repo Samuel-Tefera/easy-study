@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   FileText,
@@ -24,47 +24,49 @@ import {
   ModalFooter,
   SkeletonCard,
 } from '../components/ui';
-
-interface Document {
-  id: string;
-  title: string;
-  subject: string;
-  uploadedAt: string;
-  pageCount: number;
-}
-
-const mockDocuments: Document[] = [
-  {
-    id: '1',
-    title: 'Introduction to Machine Learning',
-    subject: 'Computer Science',
-    uploadedAt: '2 hours ago',
-    pageCount: 42,
-  },
-  {
-    id: '2',
-    title: 'Organic Chemistry – Chapter 5',
-    subject: 'Chemistry',
-    uploadedAt: '1 day ago',
-    pageCount: 18,
-  },
-  {
-    id: '3',
-    title: 'Macroeconomics: Fiscal Policy',
-    subject: 'Economics',
-    uploadedAt: '3 days ago',
-    pageCount: 35,
-  },
-];
+import { documentService, type Document } from '../services/document.service';
+import axios from 'axios';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
-  const [isLoadingDocs] = useState(false);
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [isLoadingDocs, setIsLoadingDocs] = useState(true);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const filteredDocs = mockDocuments.filter((doc) =>
-    doc.title.toLowerCase().includes(searchQuery.toLowerCase())
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        setErrorMsg(null);
+        setIsLoadingDocs(true);
+        const data = await documentService.getDocuments();
+        setDocuments(data);
+      } catch (error) {
+        console.error('Failed to fetch documents', error);
+        if (axios.isAxiosError(error)) {
+          // Handle authentication errors
+          if (error.response?.status === 401 || error.response?.status === 403) {
+            localStorage.clear(); // Delete everything from local storage
+            navigate('/login');   // Redirect to login
+            return;
+          }
+          // Handle other server errors
+          setErrorMsg(error.response?.data?.detail || 'Failed to load your documents. Please try again later.');
+        } else {
+          // Handle network or unexpected errors
+          setErrorMsg('An unexpected error occurred while fetching your documents.');
+        }
+      } finally {
+        setIsLoadingDocs(false);
+      }
+    };
+
+    fetchDocuments();
+  }, [navigate]);
+
+  const filteredDocs = documents.filter((doc) =>
+    doc.filename.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -98,7 +100,22 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* ── Documents Grid ── */}
-      {isLoadingDocs ? (
+      {errorMsg ? (
+        <div className="flex flex-col items-center justify-center py-20 text-center animate-fade-in">
+          <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-red-500/10 mb-4 border border-red-500/20">
+            <FileText className="w-6 h-6 text-red-500" />
+          </div>
+          <h3 className="text-base font-medium text-foreground mb-1">
+            Unable to Load Documents
+          </h3>
+          <p className="text-sm text-muted-foreground mb-6 max-w-xs">
+            {errorMsg}
+          </p>
+          <Button onClick={() => window.location.reload()} variant="outline">
+            Try Again
+          </Button>
+        </div>
+      ) : isLoadingDocs ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[...Array(3)].map((_, i) => (
             <SkeletonCard key={i} />
@@ -123,17 +140,16 @@ const Dashboard: React.FC = () => {
                     <MoreHorizontal className="w-4 h-4" />
                   </button>
                 </div>
-                <CardTitle className="mt-3 line-clamp-2">{doc.title}</CardTitle>
+                <CardTitle className="mt-3 line-clamp-2" title={doc.filename}>{doc.filename}</CardTitle>
                 <CardDescription>
-                  {doc.pageCount} pages
+                  {doc.page_count} pages
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center justify-between">
-                  <Badge variant="primary">{doc.subject}</Badge>
+                <div className="flex items-center justify-between mt-2">
                   <span className="flex items-center gap-1 text-xs text-muted-foreground">
                     <Clock className="w-3 h-3" />
-                    {doc.uploadedAt}
+                    {new Date(doc.created_at).toLocaleDateString()}
                   </span>
                 </div>
               </CardContent>
