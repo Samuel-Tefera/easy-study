@@ -25,10 +25,12 @@ import {
   SkeletonCard,
 } from '../components/ui';
 import { documentService, type Document } from '../services/document.service';
+import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [documents, setDocuments] = useState<Document[]>([]);
@@ -47,7 +49,7 @@ const Dashboard: React.FC = () => {
         if (axios.isAxiosError(error)) {
           // Handle authentication errors
           if (error.response?.status === 401 || error.response?.status === 403) {
-            localStorage.clear(); // Delete everything from local storage
+            logout(); // Delete from local storage and update context
             navigate('/login');   // Redirect to login
             return;
           }
