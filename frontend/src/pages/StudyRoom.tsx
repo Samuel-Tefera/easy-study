@@ -177,8 +177,20 @@ const StudyRoom: React.FC = () => {
 
   /* ── PDF state ── */
   const [numPages, setNumPages] = useState<number>(0);
+  const [pdfWidth, setPdfWidth] = useState<number>(800);
   const pdfContainerRef = useRef<HTMLDivElement>(null);
   const aiPanelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!pdfContainerRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setPdfWidth(Math.min(entry.contentRect.width - 80, 1000));
+      }
+    });
+    observer.observe(pdfContainerRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   /* ── Chat state ── */
   const [messages, setMessages] = useState<Message[]>([]);
@@ -368,11 +380,7 @@ const StudyRoom: React.FC = () => {
                 <div key={`page_${index + 1}`} className="mb-10 last:mb-0 transition-opacity duration-500">
                   <Page
                     pageNumber={index + 1}
-                    width={
-                      pdfContainerRef.current
-                        ? Math.min(pdfContainerRef.current.clientWidth - 80, 1000)
-                        : 800
-                    }
+                    width={pdfWidth}
                     renderTextLayer={true}
                     renderAnnotationLayer={true}
                   />
