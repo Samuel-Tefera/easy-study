@@ -82,7 +82,7 @@ const FloatingMenu: React.FC<FloatingMenuProps> = ({ x, y, onAction }) => {
       className="fixed z-50 animate-in fade-in zoom-in duration-200"
       style={{ left: x, top: y }}
     >
-      <div className="flex items-center gap-1.5 px-2 py-2 bg-surface-overlay/80 border border-border/50 rounded-2xl shadow-modal backdrop-blur-xl">
+      <div className="flex flex-col gap-1 p-2 bg-surface-overlay/95 border border-border/50 rounded-2xl shadow-modal backdrop-blur-xl min-w-[160px]">
         {aiActions.map((action) => (
           <button
             key={action.key}
@@ -91,14 +91,14 @@ const FloatingMenu: React.FC<FloatingMenuProps> = ({ x, y, onAction }) => {
               onAction(action.key);
             }}
             className={cn(
-              'group flex flex-col items-center justify-center gap-1.5 w-16 h-14 rounded-xl text-[10px] font-semibold transition-all duration-200',
-              'text-muted-foreground hover:text-primary hover:bg-primary/5 hover:scale-105 active:scale-95 cursor-pointer'
+              'group flex items-center justify-start gap-3 w-full p-2 rounded-xl text-xs font-semibold transition-all duration-200',
+              'text-muted-foreground hover:text-primary hover:bg-primary/10 active:scale-[0.98] cursor-pointer'
             )}
           >
-            <div className="p-2 rounded-lg bg-surface-elevated group-hover:bg-primary/10 transition-colors">
+            <div className="p-1.5 rounded-lg bg-surface-elevated group-hover:bg-primary/20 transition-colors">
               <action.icon className="w-4 h-4" />
             </div>
-            <span className="truncate w-full text-center px-1">{action.label.split(' ')[0]}</span>
+            <span>{action.label}</span>
           </button>
         ))}
       </div>
@@ -188,6 +188,37 @@ const StudyRoom: React.FC = () => {
   const [menuPosition, setMenuPosition] = useState<{ x: number; y: number } | null>(null);
   const [pendingText, setPendingText] = useState<string | null>(null);
 
+  /* ── Panel width state ── */
+  const [leftPanelWidth, setLeftPanelWidth] = useState<number>(60);
+  const isDraggingPanel = useRef(false);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDraggingPanel.current) return;
+
+      const newWidth = (e.clientX / window.innerWidth) * 100;
+      if (newWidth > 30 && newWidth < 80) { // Limit min 30%, max 80%
+        setLeftPanelWidth(newWidth);
+      }
+    };
+
+    const handleMouseUpDrag = () => {
+      if (isDraggingPanel.current) {
+        isDraggingPanel.current = false;
+        document.body.style.cursor = 'default';
+        document.body.style.userSelect = '';
+      }
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUpDrag);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUpDrag);
+    };
+  }, []);
+
   /* ── PDF loaded ── */
   function onDocumentLoadSuccess({ numPages: n }: { numPages: number }) {
     setNumPages(n);
@@ -275,7 +306,7 @@ const StudyRoom: React.FC = () => {
   return (
     <div className="flex h-screen bg-background overflow-hidden selection:bg-primary/20">
       {/* ── Left Panel: PDF Viewer ── */}
-      <div className="flex flex-col border-r border-border/50" style={{ width: '60%' }}>
+      <div className="flex flex-col relative" style={{ width: `${leftPanelWidth}%` }}>
         {/* Enhanced Header */}
         <div className="flex items-center gap-4 h-14 px-6 bg-surface/40 backdrop-blur-md shrink-0">
           <button
@@ -350,6 +381,19 @@ const StudyRoom: React.FC = () => {
             </Document>
           </div>
         </div>
+      </div>
+
+      {/* ── Drag Handle ── */}
+      <div
+        className="relative w-1.5 bg-border/40 hover:bg-primary/50 cursor-col-resize shrink-0 transition-colors z-20 flex items-center justify-center -ml-px group"
+        onMouseDown={(e) => {
+          e.preventDefault();
+          isDraggingPanel.current = true;
+          document.body.style.cursor = 'col-resize';
+          document.body.style.userSelect = 'none';
+        }}
+      >
+        <div className="h-10 w-1 bg-border/80 rounded-full group-hover:bg-primary/80 transition-colors" />
       </div>
 
       {/* ── Right Panel: AI Chat ── */}
@@ -455,19 +499,6 @@ const StudyRoom: React.FC = () => {
           )}
         </div>
 
-        {/* Input Placeholder (for future chat) */}
-        <div className="p-6 border-t border-border/50 bg-surface/50">
-          <div className="relative group">
-            <input
-              disabled
-              placeholder="Ask a follow-up question..."
-              className="w-full h-12 pl-5 pr-12 rounded-2xl bg-surface-elevated border border-border text-sm transition-all focus:border-primary/50 outline-none placeholder:text-muted-foreground/50 opacity-60 cursor-not-allowed"
-            />
-            <button disabled className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-xl bg-primary/10 text-primary opacity-40">
-              <CornerDownLeft className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
       </div>
 
       {/* ── Floating Action Menu ── */}
