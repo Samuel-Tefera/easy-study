@@ -479,24 +479,16 @@ const StudyRoom: React.FC = () => {
         >
           {messages.length === 0 ? (
             /* ── Empty State ── */
-            <div className="flex flex-col items-center justify-center h-full text-center max-w-[280px] mx-auto animate-in fade-in duration-700">
-              <div className="w-20 h-20 rounded-3xl bg-surface-elevated border border-border flex items-center justify-center mb-6 shadow-inner">
-                <Sparkles className="w-8 h-8 text-primary" />
+            <div className="flex flex-col items-center justify-center h-full text-center max-w-[260px] mx-auto animate-in fade-in duration-700">
+              <div className="w-16 h-16 rounded-3xl bg-surface-elevated border border-border flex items-center justify-center mb-6 shadow-inner">
+                <Sparkles className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-base font-bold text-foreground mb-3">
-                Your AI-Powered Study Space
-              </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-6">
-                Highlight any text in the PDF to explain, define, or get examples from your AI tutor.
+              <p className="text-[15px] font-medium text-foreground leading-relaxed mb-2">
+                Highlight any text in the document
               </p>
-              <div className="grid grid-cols-2 gap-2 w-full">
-                {aiActions.slice(0, 4).map(a => (
-                  <div key={a.key} className="p-2 rounded-xl bg-surface-elevated border border-border/50 flex flex-col items-center gap-1">
-                    <a.icon className="w-4 h-4 text-primary/50" />
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase">{a.label.split(' ')[0]}</span>
-                  </div>
-                ))}
-              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Your AI tutor will help you explain, define, or understand it better.
+              </p>
             </div>
           ) : (
             <div className="space-y-10">
