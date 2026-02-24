@@ -16,6 +16,7 @@ class AIHighlightResponse(BaseModel):
   id: uuid.UUID
   document_id: uuid.UUID
 
+  action: AIActionType
   input_text: str
   response_text: str
   created_at: datetime
