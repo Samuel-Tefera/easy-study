@@ -34,7 +34,7 @@ type ActionKey = (typeof aiActions)[number]['key'];
 /* ── Typing Effect Component ── */
 const TypingEffect: React.FC<{ text: string; speed?: number; onComplete?: () => void }> = ({
   text,
-  speed = 15,
+  speed = 5,
   onComplete,
 }) => {
   const [displayedText, setDisplayedText] = useState('');
@@ -160,13 +160,13 @@ const LoadingView: React.FC<{ text: string }> = ({ text }) => (
   </div>
 );
 
-/* ── Message Types ── */
 type Message = {
   id: string;
   role: 'user' | 'assistant';
   content: string;
   actionLabel?: string;
   timestamp: Date;
+  isNew?: boolean;
 };
 
 /* ══════════════════════════════════════════════════════
@@ -227,6 +227,39 @@ const StudyRoom: React.FC = () => {
   /* ── Chat state ── */
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
+
+  /* ── Load interaction history ── */
+  useEffect(() => {
+    async function loadHistory() {
+      if (!id) return;
+      try {
+        const history = await aiService.getHistory(id);
+        const restored: Message[] = [];
+        for (const item of history) {
+          const frontendKey = aiService.toFrontendAction(item.action);
+          const actionData = aiActions.find((a) => a.key === frontendKey);
+
+          restored.push({
+            id: item.id + '-q',
+            role: 'user',
+            content: item.input_text,
+            actionLabel: actionData?.label,
+            timestamp: new Date(item.created_at),
+          });
+          restored.push({
+            id: item.id,
+            role: 'assistant',
+            content: item.response_text,
+            timestamp: new Date(item.created_at),
+          });
+        }
+        setMessages(restored);
+      } catch (err) {
+        console.error('Failed to load AI history:', err);
+      }
+    }
+    loadHistory();
+  }, [id]);
 
   /* ── Floating menu state ── */
   const [menuPosition, setMenuPosition] = useState<{ x: number; y: number } | null>(null);
@@ -330,12 +363,13 @@ const StudyRoom: React.FC = () => {
 
     try {
       const response = await aiService.highlightText(id, userMessage.content, action);
-      const assistantMessage: Message = {
-        id: response.id,
-        role: 'assistant',
-        content: response.response_text,
-        timestamp: new Date(response.created_at),
-      };
+        const assistantMessage: Message = {
+          id: response.id,
+          role: 'assistant',
+          content: response.response_text,
+          timestamp: new Date(response.created_at),
+          isNew: true,
+        };
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (err) {
       console.error('AI highlight request failed:', err);
@@ -523,8 +557,10 @@ const StudyRoom: React.FC = () => {
                          <p className="text-[15px] leading-relaxed italic opacity-90">"{msg.content}"</p>
                       </div>
                     ) : (
-                      idx === messages.length - 1 ? (
-                        <TypingEffect text={msg.content} />
+                      msg.isNew && idx === messages.length - 1 ? (
+                        <TypingEffect text={msg.content} onComplete={() => {
+                          setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, isNew: false } : m));
+                        }} />
                       ) : (
                         <ResponseRenderer content={msg.content} />
                       )
