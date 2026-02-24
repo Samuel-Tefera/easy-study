@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from fastapi import APIRouter, Depends
 
 from sqlalchemy.orm import Session
@@ -39,3 +41,14 @@ def highlight_text(
   )
 
   return ai_interaction
+
+
+@router.get("/history/{document_id}", response_model=list[AIHighlightResponse])
+def get_history(
+    document_id: UUID,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+  ):
+
+  interactions = AIInteractionRepository.get_ai_interaction_for_document(db, document_id)
+  return interactions or []
