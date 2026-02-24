@@ -15,6 +15,7 @@ import {
 import { Badge } from '../components/ui';
 import { cn } from '../lib/utils';
 import { documentService } from '../services/document.service';
+import { aiService } from '../services/ai.service';
 
 /* ── Configure PDF.js worker ── */
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -54,20 +55,7 @@ const TypingEffect: React.FC<{ text: string; speed?: number; onComplete?: () => 
   return <ResponseRenderer content={displayedText} isTyping={index < text.length} />;
 };
 
-/* ── Simulated AI Responses (Keep for UI Dev) ── */
-function getSimulatedResponse(action: ActionKey, text: string): string {
-  const trimmed = text.length > 120 ? text.slice(0, 120) + '…' : text;
 
-  const responses: Record<ActionKey, string> = {
-    explain: `**Simple Explanation**\n\n"${trimmed}" — in simple terms, this means the concept describes a fundamental principle that forms the foundation of the broader topic.\n\n**Key takeaways:**\n- It introduces a core idea that other concepts build upon\n- Understanding this makes the rest of the material much easier to follow\n- It connects to real-world applications in meaningful ways`,
-    define: `**Definition**\n\n"${trimmed}"\n\nThis term refers to a specific concept within the field that describes a well-established principle or process. It is formally defined as a systematic approach to understanding the relationship between components in a given domain.\n\n**Origin:** The term originates from academic literature and has been widely adopted in both theoretical and practical contexts.`,
-    example: `**Example**\n\nConsider the concept: "${trimmed}"\n\n**Real-world example:**\nImagine you're organizing a library. Each book has a category (fiction, science, history). When you sort books by category, you're essentially applying this concept — grouping items based on shared characteristics.`,
-    analogy: `**Analogy**\n\nThink of "${trimmed}" like a GPS navigation system.\n\nJust as a GPS takes your starting location and destination, then calculates the best route by analyzing multiple paths — this concept works similarly by taking input data, analyzing various possibilities, and producing an optimal result.\n\nThe "roads" are like different approaches, and the "traffic data" represents the constraints and variables that influence the final outcome.`,
-    acronym: `**Acronym Expansion**\n\n"${trimmed}"\n\nBased on context, this could stand for a framework, process, or standard within the field of study. It typically refers to the underlying methodology described in the surrounding text.`,
-  };
-
-  return responses[action];
-}
 
 /* ── Floating Action Menu ── */
 interface FloatingMenuProps {
@@ -320,8 +308,8 @@ const StudyRoom: React.FC = () => {
   }, [menuPosition]);
 
   /* ── Handle action click ── */
-  function handleAction(action: ActionKey) {
-    if (!pendingText) return;
+  async function handleAction(action: ActionKey) {
+    if (!pendingText || !id) return;
 
     const actionData = aiActions.find((a) => a.key === action);
     const userMessage: Message = {
@@ -340,17 +328,27 @@ const StudyRoom: React.FC = () => {
     // clear selection
     window.getSelection()?.removeAllRanges();
 
-    // simulate delay then show AI response
-    setTimeout(() => {
+    try {
+      const response = await aiService.highlightText(id, userMessage.content, action);
       const assistantMessage: Message = {
-        id: Math.random().toString(36).substr(2, 9),
+        id: response.id,
         role: 'assistant',
-        content: getSimulatedResponse(action, userMessage.content),
-        timestamp: new Date(),
+        content: response.response_text,
+        timestamp: new Date(response.created_at),
       };
       setMessages((prev) => [...prev, assistantMessage]);
+    } catch (err) {
+      console.error('AI highlight request failed:', err);
+      const errorMessage: Message = {
+        id: Math.random().toString(36).substr(2, 9),
+        role: 'assistant',
+        content: 'Something went wrong. Please try again.',
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 600);
+    }
   }
 
   /* ── Auto-scroll to bottom of chat ── */
