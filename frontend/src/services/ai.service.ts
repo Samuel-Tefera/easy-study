@@ -11,9 +11,17 @@ const ACTION_MAP: Record<string, string> = {
   acronym: 'expand_acronym',
 };
 
+/**
+ * Reverse map: backend enum → frontend action key.
+ */
+const REVERSE_ACTION_MAP: Record<string, string> = Object.fromEntries(
+  Object.entries(ACTION_MAP).map(([k, v]) => [v, k])
+);
+
 export interface AIHighlightResponse {
   id: string;
   document_id: string;
+  action: string;
   input_text: string;
   response_text: string;
   created_at: string;
@@ -35,4 +43,15 @@ export const aiService = {
 
     return response.data;
   },
+
+  getHistory: async (documentId: string): Promise<AIHighlightResponse[]> => {
+    const response = await api.get<AIHighlightResponse[]>(`/ai/history/${documentId}`);
+    return response.data;
+  },
+
+  /** Convert a backend action value to the frontend key. */
+  toFrontendAction: (backendAction: string): string => {
+    return REVERSE_ACTION_MAP[backendAction] || backendAction;
+  },
 };
+
