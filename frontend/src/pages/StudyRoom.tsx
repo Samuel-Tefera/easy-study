@@ -9,12 +9,12 @@ import {
   MessageSquare,
   Hash,
   TextQuote,
-  CornerDownLeft,
   User,
   Bot,
 } from 'lucide-react';
 import { Badge } from '../components/ui';
 import { cn } from '../lib/utils';
+import { documentService } from '../services/document.service';
 
 /* ── Configure PDF.js worker ── */
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -159,6 +159,19 @@ const ResponseRenderer: React.FC<{ content: string; isTyping?: boolean }> = ({ c
   );
 };
 
+/* ── Loading View Component ── */
+const LoadingView: React.FC<{ text: string }> = ({ text }) => (
+  <div className="flex items-center justify-center h-[80vh] w-full">
+    <div className="flex flex-col items-center gap-4 animate-in fade-in duration-500">
+      <div className="relative">
+        <div className="w-10 h-10 border-2 border-primary/20 rounded-full" />
+        <div className="absolute top-0 w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+      <span className="text-xs font-semibold text-muted-foreground tracking-widest uppercase">{text}</span>
+    </div>
+  </div>
+);
+
 /* ── Message Types ── */
 type Message = {
   id: string;
@@ -181,15 +194,46 @@ const StudyRoom: React.FC = () => {
   const pdfContainerRef = useRef<HTMLDivElement>(null);
   const aiPanelRef = useRef<HTMLDivElement>(null);
 
+  /* ── PDF loading state ── */
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [isLoadingPdf, setIsLoadingPdf] = useState(true);
+  const [pdfError, setPdfError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadDocumentUrl() {
+      if (!id) return;
+      try {
+        setIsLoadingPdf(true);
+        setPdfError(null);
+        const { url } = await documentService.getDocumentViewUrl(id);
+        setPdfUrl(url);
+      } catch (err) {
+        console.error('Failed to load document URL:', err);
+        setPdfError('Could not securely connect to the document server.');
+      } finally {
+        setIsLoadingPdf(false);
+      }
+    }
+    loadDocumentUrl();
+  }, [id]);
+
+  /* ── Debounced ResizeObserver for PDF width ── */
   useEffect(() => {
     if (!pdfContainerRef.current) return;
+    let debounceTimer: ReturnType<typeof setTimeout>;
     const observer = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        setPdfWidth(Math.min(entry.contentRect.width - 80, 1000));
-      }
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        for (const entry of entries) {
+          setPdfWidth(Math.min(entry.contentRect.width - 80, 1000));
+        }
+      }, 200);
     });
     observer.observe(pdfContainerRef.current);
-    return () => observer.disconnect();
+    return () => {
+      clearTimeout(debounceTimer);
+      observer.disconnect();
+    };
   }, []);
 
   /* ── Chat state ── */
@@ -200,22 +244,28 @@ const StudyRoom: React.FC = () => {
   const [menuPosition, setMenuPosition] = useState<{ x: number; y: number } | null>(null);
   const [pendingText, setPendingText] = useState<string | null>(null);
 
-  /* ── Panel width state ── */
+  /* ── Panel width state (RAF‑throttled drag) ── */
   const [leftPanelWidth, setLeftPanelWidth] = useState<number>(60);
   const isDraggingPanel = useRef(false);
+  const rafId = useRef<number>(0);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isDraggingPanel.current) return;
 
-      const newWidth = (e.clientX / window.innerWidth) * 100;
-      if (newWidth > 30 && newWidth < 80) { // Limit min 30%, max 80%
-        setLeftPanelWidth(newWidth);
-      }
+      // Throttle to one update per animation frame
+      cancelAnimationFrame(rafId.current);
+      rafId.current = requestAnimationFrame(() => {
+        const newWidth = (e.clientX / window.innerWidth) * 100;
+        if (newWidth > 30 && newWidth < 80) {
+          setLeftPanelWidth(newWidth);
+        }
+      });
     };
 
     const handleMouseUpDrag = () => {
       if (isDraggingPanel.current) {
+        cancelAnimationFrame(rafId.current);
         isDraggingPanel.current = false;
         document.body.style.cursor = 'default';
         document.body.style.userSelect = '';
@@ -226,6 +276,7 @@ const StudyRoom: React.FC = () => {
     document.addEventListener('mouseup', handleMouseUpDrag);
 
     return () => {
+      cancelAnimationFrame(rafId.current);
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUpDrag);
     };
@@ -312,13 +363,10 @@ const StudyRoom: React.FC = () => {
     }
   }, [messages, isTyping]);
 
-  /* ── Fixed PDF path for testing ── */
-  const pdfUrl = '/Lecture -2 - DT.pdf';
-
   return (
     <div className="flex h-screen bg-background overflow-hidden selection:bg-primary/20">
       {/* ── Left Panel: PDF Viewer ── */}
-      <div className="flex flex-col relative" style={{ width: `${leftPanelWidth}%` }}>
+      <div className="flex flex-col relative will-change-[width]" style={{ width: `${leftPanelWidth}%` }}>
         {/* Enhanced Header */}
         <div className="flex items-center gap-4 h-14 px-6 bg-surface/40 backdrop-blur-md shrink-0">
           <button
@@ -347,37 +395,41 @@ const StudyRoom: React.FC = () => {
           className="flex-1 overflow-y-auto bg-surface-elevated/20 scrollbar-thin"
         >
           <div className="py-10 px-6 flex justify-center">
-            <Document
-              file={pdfUrl}
-              onLoadSuccess={onDocumentLoadSuccess}
-              className="shadow-2xl rounded-sm overflow-hidden"
-              loading={
-                <div className="flex items-center justify-center h-[80vh]">
-                  <div className="flex flex-col items-center gap-4">
-                    <div className="relative">
-                      <div className="w-10 h-10 border-2 border-primary/20 rounded-full" />
-                      <div className="absolute top-0 w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                    </div>
-                    <span className="text-xs font-semibold text-muted-foreground tracking-widest uppercase">Preparing Pages…</span>
+            {isLoadingPdf ? (
+              <LoadingView text="Preparing your study space…" />
+            ) : pdfError || !pdfUrl ? (
+              <div className="flex items-center justify-center h-[80vh] w-full">
+                <div className="bg-surface p-8 rounded-3xl border border-border shadow-xl text-center max-w-xs animate-in fade-in slide-in-from-bottom-4">
+                  <div className="w-12 h-12 bg-red-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <BookOpen className="w-6 h-6 text-red-500" />
                   </div>
+                  <p className="font-bold text-foreground mb-2">Access Denied</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    {pdfError || 'Failed to load document link.'}
+                  </p>
                 </div>
-              }
-              error={
-                <div className="flex items-center justify-center h-[80vh]">
-                  <div className="bg-surface p-8 rounded-3xl border border-border shadow-xl text-center max-w-xs animate-in fade-in slide-in-from-bottom-4">
-                    <div className="w-12 h-12 bg-red-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                      <BookOpen className="w-6 h-6 text-red-500" />
+              </div>
+            ) : (
+              <Document
+                file={pdfUrl}
+                onLoadSuccess={onDocumentLoadSuccess}
+                loading={<LoadingView text="Almost there, loading your document…" />}
+                error={
+                  <div className="flex items-center justify-center h-[80vh] w-full">
+                    <div className="bg-surface p-8 rounded-3xl border border-border shadow-xl text-center max-w-xs animate-in fade-in slide-in-from-bottom-4">
+                      <div className="w-12 h-12 bg-red-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <BookOpen className="w-6 h-6 text-red-500" />
+                      </div>
+                      <p className="font-bold text-foreground mb-2">Failed to Render PDF</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        The document may be corrupted or your connection was interrupted.
+                      </p>
                     </div>
-                    <p className="font-bold text-foreground mb-2">PDF Not Found</p>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      Make sure <code className="bg-surface-elevated px-1.5 py-0.5 rounded text-primary">Lecture -2 - DT.pdf</code> is in the public folder.
-                    </p>
                   </div>
-                </div>
-              }
-            >
-              {Array.from({ length: numPages }, (_, index) => (
-                <div key={`page_${index + 1}`} className="mb-10 last:mb-0 transition-opacity duration-500">
+                }
+              >
+                {Array.from({ length: numPages }, (_, index) => (
+                <div key={`page_${index + 1}`} className="mb-10 last:mb-0 shadow-2xl rounded-sm overflow-hidden" style={{ contain: 'content' }}>
                   <Page
                     pageNumber={index + 1}
                     width={pdfWidth}
@@ -386,7 +438,8 @@ const StudyRoom: React.FC = () => {
                   />
                 </div>
               ))}
-            </Document>
+              </Document>
+            )}
           </div>
         </div>
       </div>
