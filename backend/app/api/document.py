@@ -80,7 +80,10 @@ def delete_document(
     if not document.user_id == user.id:
         raise HTTPException(status_code=403, detail="Not authorized")
 
-    storage_service.delete_file(document.filename)
+    try:
+        storage_service.delete_file(document.filename)
+    except Exception as e:
+        print(f"Warning: Storage deletion failed for {document.filename}: {e}")
 
     if DocumentRepository.delete_document(db, document_id):
         return {"message": "Document and all related data deleted"}
