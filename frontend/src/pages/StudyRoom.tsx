@@ -586,6 +586,12 @@ const StudyRoom: React.FC = () => {
           )}
         </div>
 
+        {/* AI Disclaimer (Sticky at bottom) */}
+        <div className="px-6 py-4 border-t border-border/10 bg-surface/80 backdrop-blur-md shrink-0">
+          <p className="text-[10px] text-muted-foreground/60 text-center leading-relaxed italic">
+            AI may make mistakes. Please verify important information.
+          </p>
+        </div>
       </div>
 
       {/* ── Floating Action Menu ── */}
