@@ -365,7 +365,7 @@ const Dashboard: React.FC = () => {
         <ModalHeader>
           <ModalTitle>Delete Document</ModalTitle>
           <ModalDescription>
-            Are you sure you want to delete <span className="font-semibold text-foreground">"{docToDelete?.filename}"</span>?
+            Are you sure you want to delete <span className="font-semibold text-foreground break-words">"{docToDelete?.filename}"</span>?
           </ModalDescription>
         </ModalHeader>
 
