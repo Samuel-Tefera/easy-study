@@ -235,7 +235,7 @@ const Dashboard: React.FC = () => {
                 </div>
                 <CardTitle className="mt-3 line-clamp-2" title={doc.filename}>{doc.filename}</CardTitle>
                 <CardDescription>
-                  {doc.page_count} pages
+                  {doc.pages} pages
                 </CardDescription>
               </CardHeader>
               <CardContent>

@@ -4,7 +4,7 @@ export interface Document {
   id: string;
   filename: string;
   file_url: string;
-  page_count: number;
+  pages: number;
   created_at: string;
   user_id?: string;
 }
