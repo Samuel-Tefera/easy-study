@@ -30,5 +30,9 @@ export const documentService = {
       },
     });
     return response.data;
+  },
+
+  deleteDocument: async (documentId: string): Promise<void> => {
+    await api.delete(`/documents/${documentId}`);
   }
 };
