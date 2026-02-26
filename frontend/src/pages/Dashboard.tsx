@@ -9,6 +9,7 @@ import {
   MoreHorizontal,
   X,
   AlertCircle,
+  Trash2,
 } from 'lucide-react';
 import {
   Button,
@@ -43,6 +44,11 @@ const Dashboard: React.FC = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  /* ── Delete State ── */
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [docToDelete, setDocToDelete] = useState<Document | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Fetch documents on load
   const fetchDocuments = async () => {
@@ -124,6 +130,30 @@ const Dashboard: React.FC = () => {
     setUploadError(null);
   };
 
+  /* ── Handles Delete Click ── */
+  const handleDeleteClick = (e: React.MouseEvent, doc: Document) => {
+    e.stopPropagation();
+    setDocToDelete(doc);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!docToDelete) return;
+
+    try {
+      setIsDeleting(true);
+      await documentService.deleteDocument(docToDelete.id);
+      setDeleteModalOpen(false);
+      setDocToDelete(null);
+      await fetchDocuments();
+    } catch (error) {
+      console.error('Delete failed', error);
+      setErrorMsg('Failed to delete document. Please try again.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   const filteredDocs = documents.filter((doc) =>
     doc.filename.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -195,8 +225,12 @@ const Dashboard: React.FC = () => {
                   <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-primary-light shrink-0">
                     <FileText className="w-4.5 h-4.5 text-accent-foreground" />
                   </div>
-                  <button className="p-1 rounded-md text-muted-foreground opacity-0 group-hover:opacity-100 hover:bg-surface-elevated transition-all duration-200 cursor-pointer">
-                    <MoreHorizontal className="w-4 h-4" />
+                  <button
+                    onClick={(e) => handleDeleteClick(e, doc)}
+                    className="p-1 rounded-md text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-red-500 hover:bg-red-500/10 transition-all duration-200 cursor-pointer"
+                    title="Delete document"
+                  >
+                    <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
                 <CardTitle className="mt-3 line-clamp-2" title={doc.filename}>{doc.filename}</CardTitle>
@@ -322,6 +356,39 @@ const Dashboard: React.FC = () => {
              isLoading={isUploading}
           >
             {isUploading ? 'Uploading...' : 'Upload PDF'}
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      {/* ── Delete Confirmation Modal ── */}
+      <Modal open={deleteModalOpen} onClose={() => !isDeleting && setDeleteModalOpen(false)}>
+        <ModalHeader>
+          <ModalTitle>Delete Document</ModalTitle>
+          <ModalDescription>
+            Are you sure you want to delete <span className="font-semibold text-foreground">"{docToDelete?.filename}"</span>?
+          </ModalDescription>
+        </ModalHeader>
+
+        <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl mb-2">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-red-500 mt-0.5" />
+            <p className="text-sm text-red-500">
+              This action cannot be undone. All AI interactions and notes associated with this document will also be permanently deleted.
+            </p>
+          </div>
+        </div>
+
+        <ModalFooter>
+          <Button variant="secondary" onClick={() => setDeleteModalOpen(false)} disabled={isDeleting}>
+            Cancel
+          </Button>
+          <Button
+             variant="danger"
+             onClick={confirmDelete}
+             disabled={isDeleting}
+             isLoading={isDeleting}
+          >
+            {isDeleting ? 'Deleting...' : 'Delete Document'}
           </Button>
         </ModalFooter>
       </Modal>
