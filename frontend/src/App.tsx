@@ -6,6 +6,7 @@ import AppLayout from './components/layout/AppLayout';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import StudyRoom from './pages/StudyRoom';
+import Landing from './pages/Landing';
 
 /* ── Loading Screen ── */
 const LoadingScreen = () => (
@@ -42,8 +43,9 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/" element={<Landing />} />
       <Route
-        path="/"
+        path="/dashboard"
         element={
           <ProtectedRoute>
             <Dashboard />
