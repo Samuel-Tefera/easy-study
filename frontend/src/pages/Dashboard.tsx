@@ -6,7 +6,6 @@ import {
   Plus,
   Search,
   Clock,
-  MoreHorizontal,
   X,
   AlertCircle,
   Trash2,
@@ -383,7 +382,7 @@ const Dashboard: React.FC = () => {
             Cancel
           </Button>
           <Button
-             variant="danger"
+             variant="destructive"
              onClick={confirmDelete}
              disabled={isDeleting}
              isLoading={isDeleting}
