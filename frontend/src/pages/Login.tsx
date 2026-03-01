@@ -35,7 +35,13 @@ const Login: React.FC = () => {
                     <Button
                         variant="outline"
                         size="lg"
-                        onClick={() => login()}
+                        onClick={async () => {
+                            try {
+                                await login();
+                            } catch (err) {
+                                console.error('Sign in error:', err);
+                            }
+                        }}
                         isLoading={isLoading}
                         className="w-full"
                         icon={
