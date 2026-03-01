@@ -1,17 +1,7 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { googleLogout, useGoogleLogin, type CodeResponse } from '@react-oauth/google';
 import { authService } from '../services/auth.service';
 import type { User } from '../types/auth';
-
-interface AuthContextType {
-    user: User | null;
-    login: () => void;
-    logout: () => void;
-    isAuthenticated: boolean;
-    isLoading: boolean;
-}
-
-import { AuthContext } from './useAuth';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   FileText,
@@ -12,7 +12,7 @@ import {
   SkeletonCard,
 } from '../components/ui';
 import { documentService, type Document } from '../services/document.service';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import axios from 'axios';
 
 import { UploadModal } from '../components/dashboard/UploadModal';
