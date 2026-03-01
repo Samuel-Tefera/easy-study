@@ -5,10 +5,6 @@ import {
   ArrowLeft,
   Sparkles,
   BookOpen,
-  Lightbulb,
-  MessageSquare,
-  Hash,
-  TextQuote,
   User,
   Bot,
 } from 'lucide-react';
@@ -17,148 +13,14 @@ import { cn } from '../lib/utils';
 import { documentService } from '../services/document.service';
 import { aiService } from '../services/ai.service';
 
+/* ── Extracted Components ── */
+import { LoadingView } from '../components/study-room/LoadingView';
+import { FloatingMenu, aiActions, type ActionKey } from '../components/study-room/FloatingMenu';
+import { ResponseRenderer } from '../components/study-room/ResponseRenderer';
+import { TypingEffect } from '../components/study-room/TypingEffect';
+
 /* ── Configure PDF.js worker ── */
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
-
-/* ── Action Definitions ── */
-const aiActions = [
-  { key: 'explain', label: 'Explain Simple', icon: BookOpen },
-  { key: 'define', label: 'Define', icon: TextQuote },
-  { key: 'example', label: 'Give Example', icon: Lightbulb },
-  { key: 'analogy', label: 'Analogy', icon: MessageSquare },
-  { key: 'acronym', label: 'Extend Acronym', icon: Hash },
-] as const;
-
-type ActionKey = (typeof aiActions)[number]['key'];
-
-/* ── Typing Effect Component ── */
-const TypingEffect: React.FC<{ text: string; speed?: number; onComplete?: () => void }> = ({
-  text,
-  speed = 5,
-  onComplete,
-}) => {
-  const [displayedText, setDisplayedText] = useState('');
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    if (index < text.length) {
-      const timeout = setTimeout(() => {
-        setDisplayedText((prev) => prev + text[index]);
-        setIndex((prev) => prev + 1);
-      }, speed);
-      return () => clearTimeout(timeout);
-    } else if (onComplete) {
-      onComplete();
-    }
-  }, [index, text, speed, onComplete]);
-
-  return <ResponseRenderer content={displayedText} isTyping={index < text.length} />;
-};
-
-
-
-/* ── Floating Action Menu ── */
-interface FloatingMenuProps {
-  x: number;
-  y: number;
-  onAction: (action: ActionKey) => void;
-}
-
-const FloatingMenu: React.FC<FloatingMenuProps> = ({ x, y, onAction }) => {
-  return (
-    <div
-      className="fixed z-50 animate-in fade-in zoom-in duration-200"
-      style={{ left: x, top: y }}
-    >
-      <div className="flex flex-col gap-1 p-2 bg-surface-overlay/95 border border-border/50 rounded-2xl shadow-modal backdrop-blur-xl min-w-[160px]">
-        {aiActions.map((action) => (
-          <button
-            key={action.key}
-            onClick={(e) => {
-              e.stopPropagation();
-              onAction(action.key);
-            }}
-            className={cn(
-              'group flex items-center justify-start gap-3 w-full p-2 rounded-xl text-xs font-semibold transition-all duration-200',
-              'text-muted-foreground hover:text-primary hover:bg-primary/10 active:scale-[0.98] cursor-pointer'
-            )}
-          >
-            <div className="p-1.5 rounded-lg bg-surface-elevated group-hover:bg-primary/20 transition-colors">
-              <action.icon className="w-4 h-4" />
-            </div>
-            <span>{action.label}</span>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-/* ── Markdown-like Response Renderer ── */
-const ResponseRenderer: React.FC<{ content: string; isTyping?: boolean }> = ({ content, isTyping }) => {
-  return (
-    <div className="space-y-3 text-[15px] text-foreground/90 leading-relaxed">
-      {content.split('\n').map((line, i) => {
-        if (line.startsWith('**') && line.endsWith('**')) {
-          return (
-            <h4 key={i} className="font-bold text-foreground mt-5 mb-2 first:mt-0 text-base flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary/40" />
-              {line.replace(/\*\*/g, '')}
-            </h4>
-          );
-        }
-        if (line.startsWith('- ')) {
-          return (
-            <div key={i} className="flex items-start gap-3 ml-1 my-1">
-              <span className="w-1 h-1 rounded-full bg-primary mt-2.5 shrink-0 opacity-60" />
-              <span>
-                {line.slice(2).split(/(\*\*.*?\*\*)/).map((part, j) =>
-                  part.startsWith('**') && part.endsWith('**') ? (
-                    <strong key={j} className="font-bold text-foreground">
-                      {part.replace(/\*\*/g, '')}
-                    </strong>
-                  ) : (
-                    part
-                  )
-                )}
-              </span>
-            </div>
-          );
-        }
-        if (line.trim() === '') return <div key={i} className="h-2" />;
-        return (
-          <p key={i} className="my-1">
-            {line.split(/(\*\*.*?\*\*)/).map((part, j) =>
-              part.startsWith('**') && part.endsWith('**') ? (
-                <strong key={j} className="font-bold text-foreground">
-                  {part.replace(/\*\*/g, '')}
-                </strong>
-              ) : (
-                part
-              )
-            )}
-          </p>
-        );
-      })}
-      {isTyping && (
-        <span className="inline-block w-1.5 h-4 ml-1 bg-primary/40 animate-pulse align-middle" />
-      )}
-    </div>
-  );
-};
-
-/* ── Loading View Component ── */
-const LoadingView: React.FC<{ text: string }> = ({ text }) => (
-  <div className="flex items-center justify-center h-[80vh] w-full">
-    <div className="flex flex-col items-center gap-4 animate-in fade-in duration-500">
-      <div className="relative">
-        <div className="w-10 h-10 border-2 border-primary/20 rounded-full" />
-        <div className="absolute top-0 w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-      <span className="text-xs font-semibold text-muted-foreground tracking-widest uppercase">{text}</span>
-    </div>
-  </div>
-);
 
 type Message = {
   id: string;
