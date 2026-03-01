@@ -1,43 +1,41 @@
 from sqlalchemy.orm import Session
 
+from app.auth.supabase import verify_supabase_token
 from app.repositories.user_repository import UserRepository
-from app.auth.google import exchange_code_for_tokens, verify_google_id_token
-from app.auth.jwt import create_access_token
 
 
-async def google_login(
-    db: Session,
-    code: str,
-    code_verifier: str | None = None,
-    redirect_uri: str = "postmessage"
-  ):
-  tokens = await exchange_code_for_tokens(code, code_verifier, redirect_uri)
-  google_id_token = tokens.get("id_token")
+async def supabase_session_login(db: Session, access_token: str) -> dict:
+    """
+    Validates a Supabase access token, then upserts the user row in our
+    database using supabase_id as the stable identity anchor.
+    Returns the user info dict — no custom JWT is issued; the Supabase
+    token is the session token.
+    """
+    payload = verify_supabase_token(access_token)
 
-  if not google_id_token:
-    raise ValueError("No id_token returned from Google")
+    supabase_id: str = payload.get("sub")
+    email: str = payload.get("email")
+    name: str = payload.get("user_metadata", {}).get("full_name") or email
 
-  user_info = verify_google_id_token(google_id_token)
+    if not supabase_id or not email:
+        raise ValueError("Token is missing required claims (sub, email)")
 
-  email = user_info["email"]
-  name = user_info.get("name", "Google User")
+    # Look up by supabase_id first for robustness
+    user = UserRepository.get_user_by_supabase_id(db, supabase_id)
 
-  user = UserRepository.get_user_by_email(db, email)
+    if not user:
+        # New sign-in: create the user row
+        user = UserRepository.create_user(
+            db,
+            name=name,
+            email=email,
+            supabase_id=supabase_id,
+        )
 
-  if not user:
-    user = UserRepository.create_user(db, name=name, email=email)
-
-  access_token = create_access_token({
-    "sub": str(user.id),
-    "email": user.email
-  })
-
-  return {
-    "access_token": access_token,
-    "token_type": "bearer",
-    "user": {
-      "id": str(user.id),
-      "email": user.email,
-      "name": user.name,
+    return {
+        "user": {
+            "id": str(user.id),
+            "email": user.email,
+            "name": user.name,
+        }
     }
-  }
