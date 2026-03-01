@@ -16,14 +16,11 @@ const AuthCallback = () => {
         const handleAuth = async () => {
             const hash = window.location.hash;
             if (hash) {
-                console.log('[AuthCallback] Hash found, parsing manually...');
                 const params = new URLSearchParams(hash.substring(1));
                 const accessToken = params.get('access_token');
                 const refreshToken = params.get('refresh_token');
 
                 if (accessToken) {
-                    console.log('[AuthCallback] Token found manually. Informing Supabase client...');
-
                     const { error } = await supabase.auth.setSession({
                         access_token: accessToken,
                         refresh_token: refreshToken || '',
@@ -35,12 +32,10 @@ const AuthCallback = () => {
 
                     try {
                         const { user: appUser } = await authService.registerSession(accessToken);
-                        console.log('[AuthCallback] Backend sync successful.');
                         syncUser(appUser, accessToken);
                         navigate('/dashboard', { replace: true });
                         return;
                     } catch (err) {
-                        console.error('[AuthCallback] Backend sync failed:', err);
                         navigate('/login', { replace: true });
                         return;
                     }
