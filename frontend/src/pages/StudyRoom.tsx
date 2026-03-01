@@ -265,7 +265,7 @@ const StudyRoom: React.FC = () => {
         {/* Enhanced Header */}
         <div className="flex items-center gap-4 h-14 px-6 bg-surface/40 backdrop-blur-md shrink-0">
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/dashboard')}
             className="group p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-surface-elevated transition-all duration-200 cursor-pointer"
           >
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
