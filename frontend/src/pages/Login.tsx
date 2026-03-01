@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useEffect } from 'react';
 import { BookOpen } from 'lucide-react';
 import { Button } from '../components/ui';

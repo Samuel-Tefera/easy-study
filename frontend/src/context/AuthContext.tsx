@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { googleLogout, useGoogleLogin, type CodeResponse } from '@react-oauth/google';
 import { authService } from '../services/auth.service';
+import { AuthContext } from './useAuth';
 import type { User } from '../types/auth';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -47,5 +48,3 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         </AuthContext.Provider>
     );
 };
-
-export { useAuth } from './useAuth';
