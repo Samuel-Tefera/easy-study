@@ -15,7 +15,8 @@ import { aiService } from '../services/ai.service';
 
 /* ── Extracted Components ── */
 import { LoadingView } from '../components/study-room/LoadingView';
-import { FloatingMenu, aiActions, type ActionKey } from '../components/study-room/FloatingMenu';
+import { FloatingMenu } from '../components/study-room/FloatingMenu';
+import { aiActions, type ActionKey } from '../components/study-room/constants';
 import { ResponseRenderer } from '../components/study-room/ResponseRenderer';
 import { TypingEffect } from '../components/study-room/TypingEffect';
 
