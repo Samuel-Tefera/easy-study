@@ -16,6 +16,7 @@ class User(Base):
     unique=True,
     nullable=False
   )
+  supabase_id = Column(String, unique=True, nullable=True, index=True)
   name = Column(String, nullable=False)
   email = Column(String, nullable=False, unique=True)
   created_at = Column(
