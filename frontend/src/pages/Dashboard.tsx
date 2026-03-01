@@ -33,7 +33,7 @@ const Dashboard: React.FC = () => {
   const [docToDelete, setDocToDelete] = useState<Document | null>(null);
 
   // Fetch documents on load
-  const fetchDocuments = async () => {
+  const fetchDocuments = useCallback(async () => {
     try {
       setErrorMsg(null);
       setIsLoadingDocs(true);
@@ -54,11 +54,11 @@ const Dashboard: React.FC = () => {
     } finally {
       setIsLoadingDocs(false);
     }
-  };
+  }, [logout, navigate]);
 
   useEffect(() => {
     fetchDocuments();
-  }, [navigate]);
+  }, [fetchDocuments]);
 
   /* ── Handles Delete Click ── */
   const handleDeleteClick = (e: React.MouseEvent, doc: Document) => {
