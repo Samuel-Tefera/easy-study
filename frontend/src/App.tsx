@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './context/AuthContext';
 import { useAuth } from './context/useAuth';
 import AppLayout from './components/layout/AppLayout';
@@ -8,6 +7,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import StudyRoom from './pages/StudyRoom';
 import Landing from './pages/Landing';
+import AuthCallback from './pages/AuthCallback';
 
 /* ── Loading Screen ── */
 const LoadingScreen = () => (
@@ -45,6 +45,7 @@ function AppRoutes() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<Landing />} />
+      <Route path="/auth/callback" element={<AuthCallback />} />
       <Route
         path="/dashboard"
         element={
@@ -67,29 +68,12 @@ function AppRoutes() {
 
 /* ── App Root ── */
 function App() {
-  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-
-  if (!googleClientId) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <div className="bg-surface border border-border rounded-xl p-6 max-w-sm text-center shadow-card">
-          <h2 className="text-base font-semibold text-foreground mb-2">Configuration Error</h2>
-          <p className="text-sm text-muted-foreground">
-            Google Client ID is missing. Please check your <code className="text-xs bg-surface-elevated px-1 py-0.5 rounded">.env</code> file.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <GoogleOAuthProvider clientId={googleClientId}>
-      <AuthProvider>
-        <Router>
-          <AppRoutes />
-        </Router>
-      </AuthProvider>
-    </GoogleOAuthProvider>
+    <AuthProvider>
+      <Router>
+        <AppRoutes />
+      </Router>
+    </AuthProvider>
   );
 }
 

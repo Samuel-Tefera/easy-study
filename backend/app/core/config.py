@@ -5,6 +5,7 @@ class Settings(BaseSettings):
 
   SUPABASE_URL: str
   SUPABASE_KEY: str
+  SUPABASE_JWT_SECRET: str
 
   HF_API_URL: str
   HF_API_KEY: str
@@ -12,17 +13,6 @@ class Settings(BaseSettings):
   LLM_API_URL: str
   LLM_MODEL: str
   LLM_API_KEY: str
-
-  GOOGLE_CLIENT_ID: str
-  GOOGLE_CLIENT_SECRET: str
-
-  JWT_SECRET_KEY: str
-  JWT_ALGORITHM: str
-  ACCESS_TOKEN_EXPIRE_MINUTES: str
-
-  GOOGLE_TOKEN_URL: str
-
-  FRONTEND_CALLBACK_URL: str
 
   model_config = SettingsConfigDict(
       env_file=".env",
