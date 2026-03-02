@@ -9,6 +9,16 @@ const AuthCallback = () => {
     const { syncUser } = useAuth();
     const hasRun = useRef(false);
 
+    const completeSignIn = async (accessToken: string) => {
+        try {
+            const { user: appUser } = await authService.registerSession(accessToken);
+            syncUser(appUser, accessToken);
+            navigate('/dashboard', { replace: true });
+        } catch (err) {
+            navigate('/login', { replace: true });
+        }
+    };
+
     useEffect(() => {
         if (hasRun.current) return;
         hasRun.current = true;
@@ -30,27 +40,14 @@ const AuthCallback = () => {
                         console.error('[AuthCallback] setSession error:', error.message);
                     }
 
-                    try {
-                        const { user: appUser } = await authService.registerSession(accessToken);
-                        syncUser(appUser, accessToken);
-                        navigate('/dashboard', { replace: true });
-                        return;
-                    } catch (err) {
-                        navigate('/login', { replace: true });
-                        return;
-                    }
+                    await completeSignIn(accessToken);
+                    return;
                 }
             }
 
             const { data: { session } } = await supabase.auth.getSession();
             if (session?.access_token) {
-                try {
-                    const { user: appUser } = await authService.registerSession(session.access_token);
-                    syncUser(appUser, session.access_token);
-                    navigate('/dashboard', { replace: true });
-                } catch (err) {
-                    navigate('/login', { replace: true });
-                }
+                await completeSignIn(session.access_token);
                 return;
             }
 

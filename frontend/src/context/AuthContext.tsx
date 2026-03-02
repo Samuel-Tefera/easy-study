@@ -17,6 +17,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     useEffect(() => {
         let isMounted = true;
 
+        const registerAndSetUser = async (accessToken: string) => {
+            const { user: appUser } = await authService.registerSession(accessToken);
+            if (isMounted) {
+                setUser(appUser);
+            }
+        };
+
         const initAuth = async () => {
             try {
                 if (window.location.pathname === '/auth/callback') {
@@ -32,8 +39,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
                 if (session?.access_token) {
                     try {
-                        const { user: appUser } = await authService.registerSession(session.access_token);
-                        if (isMounted) setUser(appUser);
+                        await registerAndSetUser(session.access_token);
                     } catch (err) {
                         console.error('[AuthContext] Init sync failed:', err);
                         await supabase.auth.signOut();
@@ -57,13 +63,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     }
                 } else if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION' || event === 'TOKEN_REFRESHED') && session?.access_token) {
                     try {
-                        const { user: appUser } = await authService.registerSession(session.access_token);
+                        await registerAndSetUser(session.access_token);
                         if (isMounted) {
-                            setUser(appUser);
                             setIsLoading(false);
                         }
                     } catch (err) {
-                        // Silently handle or log minimal error
                     }
                 }
             }

@@ -17,7 +17,6 @@ const Login: React.FC = () => {
     return (
         <div className="flex items-center justify-center min-h-screen bg-background">
             <div className="w-full max-w-sm mx-4 animate-fade-in-up">
-                {/* Logo */}
                 <div className="flex flex-col items-center mb-8">
                     <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-primary text-primary-foreground mb-4 shadow-glow">
                         <BookOpen className="w-6 h-6" />
@@ -30,7 +29,6 @@ const Login: React.FC = () => {
                     </p>
                 </div>
 
-                {/* Card */}
                 <div className="bg-surface border border-border rounded-xl p-6 shadow-card">
                     <Button
                         variant="outline"
@@ -62,7 +60,6 @@ const Login: React.FC = () => {
                     </p>
                 </div>
 
-                {/* Footer */}
                 <p className="text-xs text-muted-foreground/40 text-center mt-6">
                     © {new Date().getFullYear()} Easy Study
                 </p>
