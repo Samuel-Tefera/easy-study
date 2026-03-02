@@ -13,12 +13,6 @@ async def login_with_supabase_session(
     body: SupabaseSessionRequest,
     db: Session = Depends(get_db),
 ):
-    """
-    Called by the frontend immediately after Supabase signs the user in.
-    Validates the Supabase access_token, upserts the user in our DB,
-    and returns the app user object.
-    The Supabase token itself is used as the Bearer token on subsequent calls.
-    """
     try:
         return await supabase_session_login(db, access_token=body.access_token)
     except ValueError as e:
