@@ -5,73 +5,85 @@ import { AuthContext } from './useAuth';
 import type { User } from '../types/auth';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [user, setUser] = useState<User | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [user, setUser] = useState<User | null>(() => {
+        const stored = localStorage.getItem('user');
+        try { return stored ? JSON.parse(stored) : null; } catch { return null; }
+    });
+    const [isLoading, setIsLoading] = useState(() => {
+        return !(localStorage.getItem('token') && localStorage.getItem('user'));
+    });
 
     const syncUser = (userData: User, token: string) => {
         setUser(userData);
         localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(userData));
         setIsLoading(false);
     };
+
+    const fetchingRef = React.useRef(false);
 
     useEffect(() => {
         let isMounted = true;
 
-        const registerAndSetUser = async (accessToken: string) => {
-            const { user: appUser } = await authService.registerSession(accessToken);
-            if (isMounted) {
-                setUser(appUser);
+        const initializeUser = async (accessToken: string) => {
+            if (fetchingRef.current) return;
+            fetchingRef.current = true;
+
+            try {
+                const { user: appUser } = await authService.registerSession(accessToken);
+                if (isMounted) {
+                    setUser(appUser);
+                    localStorage.setItem('token', accessToken);
+                    localStorage.setItem('user', JSON.stringify(appUser));
+                }
+            } catch (error) {
+                console.error('[AuthContext] registerSession error:', error);
+                // Do not forcefully sign out on network/backend error.
+                // We trust Supabase's active session state in the browser.
+            } finally {
+                if (isMounted) {
+                    setIsLoading(false);
+                    fetchingRef.current = false;
+                }
             }
         };
 
         const initAuth = async () => {
+            if (window.location.pathname === '/auth/callback') {
+                return;
+            }
+
             try {
-                if (window.location.pathname === '/auth/callback') {
-                    return;
-                }
-
                 const { data: { session }, error } = await supabase.auth.getSession();
-
-                if (error) {
-                    console.error('[AuthContext] getSession error:', error.message);
-                    return;
-                }
+                if (error) throw error;
 
                 if (session?.access_token) {
-                    try {
-                        await registerAndSetUser(session.access_token);
-                    } catch (err) {
-                        console.error('[AuthContext] Init sync failed:', err);
-                        await supabase.auth.signOut();
-                    }
+                    await initializeUser(session.access_token);
+                } else {
+                    if (isMounted) setIsLoading(false);
                 }
-            } finally {
-                if (isMounted) {
-                    setIsLoading(false);
-                }
+            } catch (err) {
+                console.error('[AuthContext] getSession error:', err);
+                if (isMounted) setIsLoading(false);
             }
         };
 
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(
-            async (event, session) => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+            if (window.location.pathname === '/auth/callback') return;
 
-                if (event === 'SIGNED_OUT') {
-                    if (isMounted) {
-                        setUser(null);
-                        localStorage.removeItem('token');
-                        setIsLoading(false);
-                    }
-                } else if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION' || event === 'TOKEN_REFRESHED') && session?.access_token) {
-                    try {
-                        await registerAndSetUser(session.access_token);
-                        if (isMounted) {
-                            setIsLoading(false);
-                        }
-                    } catch (err) {
-                    }
+            if (event === 'SIGNED_OUT') {
+                if (isMounted) {
+                    setUser(null);
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    setIsLoading(false);
                 }
+            } else if (session?.access_token && (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED')) {
+                await initializeUser(session.access_token);
+            } else if (event === 'INITIAL_SESSION' && !session) {
+                if (isMounted) setIsLoading(false);
             }
-        );
+        });
 
         initAuth();
 
@@ -95,6 +107,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const logout = async () => {
         await supabase.auth.signOut();
         setUser(null);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
     };
 
     return (

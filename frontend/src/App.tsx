@@ -39,11 +39,21 @@ const ProtectedRouteNoLayout = ({ children }: { children: React.ReactNode }) => 
   return <>{children}</>;
 };
 
+/* ── Public Route (Redirects to dashboard if logged in) ── */
+const PublicRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) return <LoadingScreen />;
+  if (isAuthenticated) return <Navigate to="/dashboard" replace />;
+
+  return <>{children}</>;
+};
+
 /* ── Routes ── */
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
+      <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
       <Route path="/" element={<Landing />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
       <Route

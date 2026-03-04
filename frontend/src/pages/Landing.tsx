@@ -2,9 +2,19 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { BookOpen, Sparkles, BrainCircuit, LineChart, FileText, MessageSquare, ArrowRight } from 'lucide-react';
 import { Button } from '../components/ui';
+import { useAuth } from '../context/useAuth';
 
 const Landing = () => {
     const navigate = useNavigate();
+    const { isAuthenticated } = useAuth();
+
+    const handleAction = () => {
+        if (isAuthenticated) {
+            navigate('/dashboard');
+        } else {
+            navigate('/login');
+        }
+    };
 
     const fadeIn = {
         initial: { opacity: 0, y: 20 },
@@ -24,8 +34,12 @@ const Landing = () => {
                         <span className="font-semibold tracking-tight text-lg">Easy Study</span>
                     </div>
                     <div className="flex items-center gap-4">
-                        <Button variant="ghost" onClick={() => navigate('/login')}>Sign In</Button>
-                        <Button onClick={() => navigate('/login')}>Get Started</Button>
+                        <Button variant="ghost" onClick={handleAction}>
+                            {isAuthenticated ? 'Dashboard' : 'Sign In'}
+                        </Button>
+                        <Button onClick={handleAction}>
+                            {isAuthenticated ? 'Go to Study' : 'Get Started'}
+                        </Button>
                     </div>
                 </div>
             </nav>
@@ -70,8 +84,8 @@ const Landing = () => {
                         transition={{ duration: 0.6, delay: 0.3 }}
                         className="flex items-center justify-center gap-4"
                     >
-                        <Button size="lg" className="h-12 px-8 text-base" onClick={() => navigate('/login')} icon={<ArrowRight className="w-4 h-4" />}>
-                            Start Studying Now
+                        <Button size="lg" className="h-12 px-8 text-base" onClick={handleAction} icon={<ArrowRight className="w-4 h-4" />}>
+                            {isAuthenticated ? 'Continue Studying' : 'Start Studying Now'}
                         </Button>
                     </motion.div>
 
@@ -228,10 +242,10 @@ const Landing = () => {
                         <Button
                             size="lg"
                             className="h-14 px-8 text-base shadow-glow hover:-translate-y-1 transition-transform duration-300"
-                            onClick={() => navigate('/login')}
+                            onClick={handleAction}
                             icon={<ArrowRight className="w-4 h-4" />}
                         >
-                            Get Started for Free
+                            {isAuthenticated ? 'Go to Dashboard' : 'Get Started for Free'}
                         </Button>
                     </div>
                 </div>
