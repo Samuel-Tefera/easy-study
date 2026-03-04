@@ -46,7 +46,6 @@ const Landing = () => {
 
             {/* Hero Section */}
             <section className="pt-32 pb-20 px-6 relative">
-                {/* Glowing background effect */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-primary/20 blur-[120px] rounded-full pointer-events-none opacity-50" />
 
                 <div className="max-w-7xl mx-auto text-center relative z-10">
@@ -166,58 +165,67 @@ const Landing = () => {
 
                     <div className="space-y-32">
                         {/* Step 1 */}
-                        <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+                        <div className="grid md:grid-cols-[2fr_3fr] gap-12 lg:gap-16 items-center">
                             <div>
                                 <div className="text-primary font-bold text-lg mb-2">Step 1</div>
                                 <h3 className="text-3xl font-bold mb-4">Upload Your PDF Files</h3>
-                                <p className="text-lg text-muted-foreground leading-relaxed flex flex-col gap-4">
-                                    <span>Just upload your PDF notes, books, or research papers into the app.</span>
+                                <p className="text-lg text-muted-foreground leading-relaxed">
+                                    Just upload your PDF notes, books, or research papers into the app.
                                 </p>
                             </div>
-                            <div className="w-full max-w-[90%] mx-auto md:max-w-[85%] lg:max-w-md aspect-[4/3] rounded-2xl border border-border/50 bg-surface/50 backdrop-blur-sm shadow-card flex items-center justify-center p-4 group hover:border-primary/30 transition-colors">
-                                <div className="w-full h-full rounded-xl bg-background border border-border/30 flex items-center justify-center flex-col gap-3 relative overflow-hidden shadow-inner">
-                                    <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent z-10 hidden group-hover:flex items-end justify-center pb-6 transition-all">
-                                        <span className="text-sm font-medium text-primary">Upload View Placeholder</span>
-                                    </div>
-                                    <FileText className="w-16 h-16 opacity-20 text-foreground group-hover:text-primary transition-colors duration-500" />
+                            <div className="w-full aspect-[2/1] rounded-2xl border border-border/50 bg-surface/50 backdrop-blur-sm shadow-card p-1.5 group hover:border-primary/30 transition-colors overflow-hidden">
+                                <div className="w-full h-full rounded-xl overflow-hidden relative shadow-inner">
+                                    <img
+                                        src="/images/hiw-1.png"
+                                        alt="Upload PDF"
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        onError={(e) => {
+                                            (e.target as HTMLImageElement).src = '/images/hiw1-.png';
+                                        }}
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                 </div>
                             </div>
                         </div>
 
                         {/* Step 2 */}
-                        <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
-                            <div className="order-2 md:order-1 w-full max-w-[90%] mx-auto md:max-w-[85%] lg:max-w-md aspect-[4/3] rounded-2xl border border-border/50 bg-surface/50 backdrop-blur-sm shadow-card flex items-center justify-center p-4 group hover:border-primary/30 transition-colors">
-                                <div className="w-full h-full rounded-xl bg-background border border-border/30 flex items-center justify-center flex-col gap-3 relative overflow-hidden shadow-inner">
-                                    <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent z-10 hidden group-hover:flex items-end justify-center pb-6 transition-all">
-                                        <span className="text-sm font-medium text-primary">Side-by-Side Interface Placeholder</span>
-                                    </div>
-                                    <MessageSquare className="w-16 h-16 opacity-20 text-foreground group-hover:text-primary transition-colors duration-500" />
+                        <div className="grid md:grid-cols-[3fr_2fr] gap-12 lg:gap-16 items-center">
+                            <div className="order-2 md:order-1 w-full aspect-[2/1] rounded-2xl border border-border/50 bg-surface/50 backdrop-blur-sm shadow-card p-1.5 group hover:border-primary/30 transition-colors overflow-hidden">
+                                <div className="w-full h-full rounded-xl overflow-hidden relative shadow-inner">
+                                    <img
+                                        src="/images/hiw-2.png"
+                                        alt="Read with AI"
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                 </div>
                             </div>
                             <div className="order-1 md:order-2">
                                 <div className="text-primary font-bold text-lg mb-2">Step 2</div>
                                 <h3 className="text-3xl font-bold mb-4">Read Side-by-Side with AI</h3>
-                                <p className="text-lg text-muted-foreground leading-relaxed flex flex-col gap-4">
-                                    <span>Read your document normally on the left, while your intelligent AI companion sits ready on the right.</span>
+                                <p className="text-lg text-muted-foreground leading-relaxed">
+                                    Read your document normally on the left, while your intelligent AI companion sits ready on the right.
                                 </p>
                             </div>
                         </div>
 
                         {/* Step 3 */}
-                        <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+                        <div className="grid md:grid-cols-[2fr_3fr] gap-12 lg:gap-16 items-center">
                             <div>
                                 <div className="text-primary font-bold text-lg mb-2">Step 3</div>
                                 <h3 className="text-3xl font-bold mb-4">Highlight for Explanations</h3>
-                                <p className="text-lg text-muted-foreground leading-relaxed flex flex-col gap-4">
-                                    <span>Get explanations, examples, or related things with AI by just highlighting the text.</span>
+                                <p className="text-lg text-muted-foreground leading-relaxed">
+                                    Get explanations, examples, or related things with AI by just highlighting the text.
                                 </p>
                             </div>
-                            <div className="w-full max-w-[90%] mx-auto md:max-w-[85%] lg:max-w-md aspect-[4/3] rounded-2xl border border-border/50 bg-surface/50 backdrop-blur-sm shadow-card flex items-center justify-center p-4 group hover:border-primary/30 transition-colors">
-                                <div className="w-full h-full rounded-xl bg-background border border-border/30 flex items-center justify-center flex-col gap-3 relative overflow-hidden shadow-inner">
-                                    <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent z-10 hidden group-hover:flex items-end justify-center pb-6 transition-all">
-                                        <span className="text-sm font-medium text-primary">Highlight Context Menu Placeholder</span>
-                                    </div>
-                                    <Sparkles className="w-16 h-16 opacity-20 text-foreground group-hover:text-primary transition-colors duration-500" />
+                            <div className="w-full aspect-[2/1] rounded-2xl border border-border/50 bg-surface/50 backdrop-blur-sm shadow-card p-1.5 group hover:border-primary/30 transition-colors overflow-hidden">
+                                <div className="w-full h-full rounded-xl overflow-hidden relative shadow-inner">
+                                    <img
+                                        src="/images/hiw-3.png"
+                                        alt="Highlight for Explanations"
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                 </div>
                             </div>
                         </div>
@@ -225,7 +233,6 @@ const Landing = () => {
                 </div>
             </section>
 
-            {/* CTA Section - Minimal Modern Style */}
             <section className="py-32 px-6 relative border-t border-border/30 bg-background">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-primary/10 blur-[130px] rounded-full pointer-events-none" />
 
