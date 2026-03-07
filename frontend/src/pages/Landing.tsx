@@ -118,7 +118,6 @@ const Landing = () => {
                     <div className="grid md:grid-cols-3 gap-6">
                         {/* Feature 1 */}
                         <motion.div
-                            whileHover={{ y: -5 }}
                             className="bg-surface/50 backdrop-blur-sm border border-border/50 p-8 rounded-3xl hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm"
                         >
                             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary flex items-center justify-center mb-6 shadow-inner">
@@ -130,7 +129,6 @@ const Landing = () => {
 
                         {/* Feature 2 */}
                         <motion.div
-                            whileHover={{ y: -5 }}
                             className="bg-surface/50 backdrop-blur-sm border border-border/50 p-8 rounded-3xl hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm"
                         >
                             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary flex items-center justify-center mb-6 shadow-inner">
@@ -142,7 +140,6 @@ const Landing = () => {
 
                         {/* Feature 3 */}
                         <motion.div
-                            whileHover={{ y: -5 }}
                             className="bg-surface/50 backdrop-blur-sm border border-border/50 p-8 rounded-3xl hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm"
                         >
                             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary flex items-center justify-center mb-6 shadow-inner">
@@ -178,12 +175,11 @@ const Landing = () => {
                                     <img
                                         src="/images/hiw-1.png"
                                         alt="Upload PDF"
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        className="w-full h-full object-cover"
                                         onError={(e) => {
                                             (e.target as HTMLImageElement).src = '/images/hiw1-.png';
                                         }}
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                 </div>
                             </div>
                         </div>
@@ -195,9 +191,8 @@ const Landing = () => {
                                     <img
                                         src="/images/hiw-2.png"
                                         alt="Read with AI"
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        className="w-full h-full object-cover"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                 </div>
                             </div>
                             <div className="order-1 md:order-2">
@@ -223,9 +218,8 @@ const Landing = () => {
                                     <img
                                         src="/images/hiw-3.png"
                                         alt="Highlight for Explanations"
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        className="w-full h-full object-cover"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                 </div>
                             </div>
                         </div>
