@@ -1,6 +1,6 @@
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { BookOpen, Sparkles, BrainCircuit, LineChart, FileText, MessageSquare, ArrowRight } from 'lucide-react';
+import { BookOpen, Sparkles, BrainCircuit, LineChart, FileText, ArrowRight } from 'lucide-react';
 import { Button } from '../components/ui';
 import { useAuth } from '../context/useAuth';
 
