@@ -9,6 +9,8 @@ import StudyRoom from './pages/StudyRoom';
 import Landing from './pages/Landing';
 import AuthCallback from './pages/AuthCallback';
 import NotFound from './pages/NotFound';
+import TermsOfService from './pages/TermsOfService';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 import ErrorBoundary from './components/ErrorBoundary';
 
 const LoadingScreen = () => (
@@ -70,6 +72,8 @@ function AppRoutes() {
           </ProtectedRouteNoLayout>
         }
       />
+      <Route path="/terms" element={<TermsOfService />} />
+      <Route path="/privacy" element={<PrivacyPolicy />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

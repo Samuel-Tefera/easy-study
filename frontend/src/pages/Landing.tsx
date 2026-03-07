@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { BookOpen, Sparkles, BrainCircuit, LineChart, FileText, MessageSquare, ArrowRight } from 'lucide-react';
 import { Button } from '../components/ui';
@@ -260,8 +260,9 @@ const Landing = () => {
                         © {new Date().getFullYear()} Easy Study. All rights reserved.
                     </p>
                     <div className="flex gap-4 text-sm text-muted-foreground">
-                        <a href="#" className="hover:text-foreground transition-colors">Privacy Policy</a>
-                        <a href="#" className="hover:text-foreground transition-colors">Terms of Service</a>
+                        <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
+                        <Link to="/terms" className="hover:text-foreground transition-colors">Terms of Service</Link>
+                        <a href="https://github.com/Samuel-Tefera/easy-study" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">GitHub</a>
                     </div>
                 </div>
             </footer>
