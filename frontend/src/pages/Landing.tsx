@@ -173,12 +173,9 @@ const Landing = () => {
                             <div className="w-full aspect-[2/1] rounded-2xl border border-border/50 bg-surface/50 backdrop-blur-sm shadow-card p-1.5 group hover:border-primary/30 transition-colors overflow-hidden">
                                 <div className="w-full h-full rounded-xl overflow-hidden relative shadow-inner">
                                     <img
-                                        src="/images/hiw-1.png"
+                                        src="/images/hiw1-.png"
                                         alt="Upload PDF"
                                         className="w-full h-full object-cover"
-                                        onError={(e) => {
-                                            (e.target as HTMLImageElement).src = '/images/hiw1-.png';
-                                        }}
                                     />
                                 </div>
                             </div>
