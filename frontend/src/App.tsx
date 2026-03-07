@@ -8,8 +8,9 @@ import Dashboard from './pages/Dashboard';
 import StudyRoom from './pages/StudyRoom';
 import Landing from './pages/Landing';
 import AuthCallback from './pages/AuthCallback';
+import NotFound from './pages/NotFound';
+import ErrorBoundary from './components/ErrorBoundary';
 
-/* ── Loading Screen ── */
 const LoadingScreen = () => (
   <div className="flex items-center justify-center min-h-screen bg-background">
     <div className="flex flex-col items-center gap-3 animate-fade-in">
@@ -19,7 +20,6 @@ const LoadingScreen = () => (
   </div>
 );
 
-/* ── Protected Route Wrapper ── */
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, isLoading } = useAuth();
 
@@ -29,7 +29,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <AppLayout>{children}</AppLayout>;
 };
 
-/* ── Protected Route (No Layout — full-screen) ── */
 const ProtectedRouteNoLayout = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, isLoading } = useAuth();
 
@@ -39,7 +38,6 @@ const ProtectedRouteNoLayout = ({ children }: { children: React.ReactNode }) => 
   return <>{children}</>;
 };
 
-/* ── Public Route (Redirects to dashboard if logged in) ── */
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, isLoading } = useAuth();
 
@@ -72,6 +70,7 @@ function AppRoutes() {
           </ProtectedRouteNoLayout>
         }
       />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
@@ -79,11 +78,13 @@ function AppRoutes() {
 /* ── App Root ── */
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <AppRoutes />
-      </Router>
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <Router>
+          <AppRoutes />
+        </Router>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 
