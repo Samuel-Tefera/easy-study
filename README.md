@@ -8,7 +8,6 @@
     <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase" />
     <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
   </p>
-
   <img src="docs/screenshots/screenshots1.png" alt="Easy Study Application Interface" width="800" />
 </div>
 
@@ -38,26 +37,7 @@
 * **Hugging Face (`all-MiniLM-L6-v2`)**: Leverages this lightweight, robust sentence-transformer model via the Hugging Face Inference API. It acts as the backbone for semantic search capabilities by efficiently converting PDF text chunks into semantic vector embeddings. This ensures that the context provided to the LLM is highly relevant to the specific questions.
 * **Groq API**: Powers the rapid, intelligent generation of explanations using cutting-edge LLMs.
 
----
 
-## 📸 Application Gallery
-
-<table align="center">
-  <tr>
-    <td align="center"><img src="docs/screenshots/screenshots2.png" alt="Dashboard View" width="400"/></td>
-    <td align="center"><img src="docs/screenshots/screenshots3.png" alt="Study Session" width="400"/></td>
-  </tr>
-  <tr>
-    <td align="center"><img src="docs/screenshots/screenshots4.png" alt="AI Explanations" width="400"/></td>
-    <td align="center"><img src="docs/screenshots/screenshots5.png" alt="Document Navigation" width="400"/></td>
-  </tr>
-  <tr>
-    <td align="center"><img src="docs/screenshots/screenshots6.png" alt="Profile Settings" width="400"/></td>
-    <td align="center"><img src="docs/screenshots/screenshots7.png" alt="Mobile Responsiveness" width="400"/></td>
-  </tr>
-</table>
-
----
 
 ## 🏗️ System Architecture
 
@@ -137,6 +117,25 @@ The fastest way to get Easy Study running locally is using Docker Compose.
 4. **Access the App:**
    * Frontend: `http://localhost:5173`
    * Backend API / Swagger Docs: `http://localhost:8000/docs`
+
+---
+
+## 📸 Application Gallery
+
+<table align="center">
+  <tr>
+    <td align="center"><img src="docs/screenshots/screenshots2.png" alt="Dashboard View" width="400"/></td>
+    <td align="center"><img src="docs/screenshots/screenshots3.png" alt="Study Session" width="400"/></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/screenshots4.png" alt="AI Explanations" width="400"/></td>
+    <td align="center"><img src="docs/screenshots/screenshots5.png" alt="Document Navigation" width="400"/></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/screenshots6.png" alt="Profile Settings" width="400"/></td>
+    <td align="center"><img src="docs/screenshots/screenshots7.png" alt="Mobile Responsiveness" width="400"/></td>
+  </tr>
+</table>
 
 ---
 
