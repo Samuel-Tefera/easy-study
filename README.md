@@ -1,8 +1,8 @@
 <div align="center">
-  <table align="center">
+  <table align="center" border="0">
     <tr>
-      <td><img src="docs/logo.svg" width="60" alt="Easy Study Logo" /></td>
-      <td><h1>Easy Study</h1></td>
+      <td style="border: none;"><img src="docs/logo.svg" width="60" alt="Easy Study Logo" /></td>
+      <td style="border: none;"><h1>Easy Study</h1></td>
     </tr>
   </table>
   <p><strong>Your AI-powered document tutor. Upload PDFs and learn with contextual AI explanations.</strong></p>
