@@ -102,7 +102,7 @@ The fastest way to get Easy Study running locally is using Docker Compose.
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/easy-study.git
+   git clone https://github.com/Samuel-Tefera/easy-study.git
    cd easy-study
    ```
 
