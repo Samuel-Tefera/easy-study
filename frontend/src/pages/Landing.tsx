@@ -96,12 +96,14 @@ const Landing = () => {
                         className="mt-16 relative w-full max-w-5xl mx-auto rounded-2xl border border-border/50 bg-surface/50 p-2 shadow-2xl backdrop-blur-sm"
                     >
                         <div className="aspect-[16/9] rounded-xl overflow-hidden bg-surface-elevated flex items-center justify-center border border-border/50 relative">
-                            {/* In production, replace this with an actual video/gif tag */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-surface to-background flex flex-col items-center justify-center text-muted-foreground/50">
-                                <BookOpen className="w-16 h-16 mb-4 opacity-50" />
-                                <p className="font-medium">Main App Demo (Video/GIF)</p>
-                                <p className="text-sm">~ 10-15s showing study flow</p>
-                            </div>
+                            <video
+                                src="/vids/landing-vid.mp4"
+                                className="w-full h-full object-cover absolute inset-0"
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                            />
                         </div>
                     </motion.div>
                 </div>
