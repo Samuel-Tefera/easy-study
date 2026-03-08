@@ -1,10 +1,8 @@
 <div align="center">
-  <table align="center" border="0">
-    <tr>
-      <td style="border: none;"><img src="docs/logo.svg" width="60" alt="Easy Study Logo" /></td>
-      <td style="border: none;"><h1>Easy Study</h1></td>
-    </tr>
-  </table>
+  <div>
+  <img src="docs/logo.svg" width="55" align="middle" alt="Easy Study Logo" />
+  <h1>Easy Study</h1>
+</div>
   <p><strong>Your AI-powered document tutor. Upload PDFs and learn with contextual AI explanations.</strong></p>
   <p>
     <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
@@ -126,18 +124,18 @@ The fastest way to get Easy Study running locally is using Docker Compose.
 
 ## 📸 Application Gallery
 
-<table align="center" cellspacing="0" cellpadding="4">
+<table width="100%" cellspacing="2" cellpadding="0">
   <tr>
-    <td align="center"><img src="docs/screenshots/screenshots2.png" alt="Dashboard View" width="600"/></td>
-    <td align="center"><img src="docs/screenshots/screenshots3.png" alt="Study Session" width="600"/></td>
+    <td align="center" width="50%"><img src="docs/screenshots/screenshots2.png" alt="Dashboard View" width="100%"/></td>
+    <td align="center" width="50%"><img src="docs/screenshots/screenshots3.png" alt="Study Session" width="100%"/></td>
   </tr>
   <tr>
-    <td align="center"><img src="docs/screenshots/screenshots4.png" alt="AI Explanations" width="600"/></td>
-    <td align="center"><img src="docs/screenshots/screenshots5.png" alt="Document Navigation" width="600"/></td>
+    <td align="center" width="50%"><img src="docs/screenshots/screenshots4.png" alt="AI Explanations" width="100%"/></td>
+    <td align="center" width="50%"><img src="docs/screenshots/screenshots5.png" alt="Document Navigation" width="100%"/></td>
   </tr>
   <tr>
-    <td align="center"><img src="docs/screenshots/screenshots6.png" alt="Profile Settings" width="600"/></td>
-    <td align="center"><img src="docs/screenshots/screenshots7.png" alt="Mobile Responsiveness" width="600"/></td>
+    <td align="center" width="50%"><img src="docs/screenshots/screenshots6.png" alt="Profile Settings" width="100%"/></td>
+    <td align="center" width="50%"><img src="docs/screenshots/screenshots7.png" alt="Mobile Responsiveness" width="100%"/></td>
   </tr>
 </table>
 
