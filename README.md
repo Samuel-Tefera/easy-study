@@ -1,14 +1,18 @@
 <div align="center">
-  <h1>Easy Study 🎓</h1>
+  <table align="center">
+    <tr>
+      <td><img src="docs/logo.svg" width="60" alt="Easy Study Logo" /></td>
+      <td><h1>Easy Study</h1></td>
+    </tr>
+  </table>
   <p><strong>Your AI-powered document tutor. Upload PDFs and learn with contextual AI explanations.</strong></p>
-
   <p>
     <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
     <img src="https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi" alt="FastAPI" />
     <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase" />
     <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
   </p>
-  <img src="docs/screenshots/screenshots1.png" alt="Easy Study Application Interface" width="800" />
+  <img src="docs/screenshots/hero-screenshot.png" alt="Easy Study Application Interface" width="100%" />
 </div>
 
 ---
@@ -122,18 +126,18 @@ The fastest way to get Easy Study running locally is using Docker Compose.
 
 ## 📸 Application Gallery
 
-<table align="center">
+<table align="center" cellspacing="0" cellpadding="4">
   <tr>
-    <td align="center"><img src="docs/screenshots/screenshots2.png" alt="Dashboard View" width="400"/></td>
-    <td align="center"><img src="docs/screenshots/screenshots3.png" alt="Study Session" width="400"/></td>
+    <td align="center"><img src="docs/screenshots/screenshots2.png" alt="Dashboard View" width="600"/></td>
+    <td align="center"><img src="docs/screenshots/screenshots3.png" alt="Study Session" width="600"/></td>
   </tr>
   <tr>
-    <td align="center"><img src="docs/screenshots/screenshots4.png" alt="AI Explanations" width="400"/></td>
-    <td align="center"><img src="docs/screenshots/screenshots5.png" alt="Document Navigation" width="400"/></td>
+    <td align="center"><img src="docs/screenshots/screenshots4.png" alt="AI Explanations" width="600"/></td>
+    <td align="center"><img src="docs/screenshots/screenshots5.png" alt="Document Navigation" width="600"/></td>
   </tr>
   <tr>
-    <td align="center"><img src="docs/screenshots/screenshots6.png" alt="Profile Settings" width="400"/></td>
-    <td align="center"><img src="docs/screenshots/screenshots7.png" alt="Mobile Responsiveness" width="400"/></td>
+    <td align="center"><img src="docs/screenshots/screenshots6.png" alt="Profile Settings" width="600"/></td>
+    <td align="center"><img src="docs/screenshots/screenshots7.png" alt="Mobile Responsiveness" width="600"/></td>
   </tr>
 </table>
 
