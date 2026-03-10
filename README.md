@@ -17,10 +17,10 @@
 
 ## 🌟 Features
 
-* 📄 **Smart PDF Uploads:** Effortlessly upload and parse your study materials.
-* 🤖 **AI-Powered Explanations:** Receive contextual, intelligent explanations directly from your documents.
-* ⚡ **Seamless Authentication:** Secure and fast login powered by Supabase.
-* 📱 **Modern & Responsive UI:** A beautiful, intuitive layout built with Tailwind CSS and Framer Motion.
+* **Smart PDF Uploads:** Effortlessly upload and parse your study materials.
+* **AI-Powered Explanations:** Receive contextual, intelligent explanations directly from your documents.
+* **Seamless Authentication:** Secure and fast login powered by Supabase.
+* **Modern & Responsive UI:** A beautiful, intuitive layout built with Tailwind CSS and Framer Motion.
 
 ## 🛠️ Tech Stack
 
