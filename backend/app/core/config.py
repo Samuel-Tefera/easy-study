@@ -14,6 +14,8 @@ class Settings(BaseSettings):
   LLM_MODEL: str
   LLM_API_KEY: str
 
+  ALLOWED_ORIGINS: str = "http://localhost:5173,http://localhost:5174"
+
   model_config = SettingsConfigDict(
       env_file=".env",
       env_file_encoding='utf-8',

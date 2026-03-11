@@ -9,15 +9,13 @@ from app.api import auth, user
 from app.api import document
 from app.api import ai
 
+from app.core.config import settings
+
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://127.0.0.1:5500",
-        "http://localhost:5173",
-        "http://localhost:5174",
-    ],
+    allow_origins=[o.strip() for o in settings.ALLOWED_ORIGINS.split(",")],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
