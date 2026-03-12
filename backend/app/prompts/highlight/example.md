@@ -6,6 +6,6 @@ SELECTED TEXT:
 
 TASK:
 Explain the concept and give a practical example.
-The example should remain relevant to the document’s subject.
+Strict Constraint: Provide the explanation and example directly. Do not use phrases like "Certainly," "Here's an example," or "Let me illustrate."
 
 ANSWER:

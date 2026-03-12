@@ -6,6 +6,6 @@ ACRONYM:
 
 TASK:
 Expand the acronym and briefly explain it.
-Use the document as reference and supplement if needed.
+Strict Constraint: Output format: [Expanded Form] - [Brief Explanation]. Use no other words, introductory phrases, or formatting outside this structure.
 
 ANSWER:

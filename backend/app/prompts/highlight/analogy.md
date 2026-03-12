@@ -6,6 +6,6 @@ SELECTED TEXT:
 
 TASK:
 Explain the concept using a simple analogy.
-The analogy should align with the document’s topic.
+Strict Constraint: Start with the analogy itself. No introductory sentences about what you are doing or how the analogy helps.
 
 ANSWER:

@@ -6,7 +6,6 @@ SELECTED TEXT:
 
 TASK:
 Explain the selected text in simple terms.
-You may use related knowledge to clarify,
-but stay within the document's subject area.
+Strict Constraint: Provide the explanation immediately. Do not say "Sure", "Here is an explanation", or "I can clarify that". Start with the core explanation.
 
 ANSWER:
