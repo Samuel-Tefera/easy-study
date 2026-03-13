@@ -26,18 +26,18 @@ const Landing = () => {
         <div className="min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-primary/30">
             {/* Navbar */}
             <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border/40">
-                <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-glow">
                             <BookOpen className="w-5 h-5" />
                         </div>
-                        <span className="font-semibold tracking-tight text-lg">Easy Study</span>
+                        <span className="font-semibold tracking-tight text-lg hidden xs:block">Easy Study</span>
                     </div>
-                    <div className="flex items-center gap-4">
-                        <Button variant="ghost" onClick={handleAction}>
+                    <div className="flex items-center gap-2 sm:gap-4">
+                        <Button variant="ghost" size="sm" className="px-2 sm:px-4" onClick={handleAction}>
                             {isAuthenticated ? 'Dashboard' : 'Sign In'}
                         </Button>
-                        <Button onClick={handleAction}>
+                        <Button size="sm" className="px-3 sm:px-6 h-9" onClick={handleAction}>
                             {isAuthenticated ? 'Go to Study' : 'Get Started'}
                         </Button>
                     </div>
@@ -45,8 +45,8 @@ const Landing = () => {
             </nav>
 
             {/* Hero Section */}
-            <section className="pt-32 pb-20 px-6 relative">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-primary/20 blur-[120px] rounded-full pointer-events-none opacity-50" />
+            <section className="pt-24 sm:pt-32 pb-16 sm:pb-20 px-4 sm:px-6 relative">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[800px] aspect-square bg-primary/20 blur-[80px] sm:blur-[120px] rounded-full pointer-events-none opacity-50" />
 
                 <div className="max-w-7xl mx-auto text-center relative z-10">
                     <motion.div
@@ -63,16 +63,16 @@ const Landing = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.1 }}
-                        className="text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent"
+                        className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent leading-[1.1]"
                     >
-                        Master Your Studies <br /> with AI
+                        Master Your Studies <br className="hidden sm:block" /> with AI
                     </motion.h1>
 
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.2 }}
-                        className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10"
+                        className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 px-2"
                     >
                         Upload your PDFs, textbooks, and notes. Ask questions, get instant explanations, and track your progress effortlessly in a beautiful workspace.
                     </motion.p>
@@ -88,14 +88,13 @@ const Landing = () => {
                         </Button>
                     </motion.div>
 
-                    {/* App Demo Video/GIF Placeholder */}
                     <motion.div
                         initial={{ opacity: 0, y: 40 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.4 }}
-                        className="mt-16 relative w-full max-w-5xl mx-auto rounded-2xl border border-border/50 bg-surface/50 p-2 shadow-2xl backdrop-blur-sm"
+                        className="mt-12 sm:mt-16 relative w-full max-w-5xl mx-auto rounded-3xl border border-border/50 bg-surface/50 p-1.5 sm:p-2 shadow-2xl backdrop-blur-sm"
                     >
-                        <div className="aspect-[16/9] rounded-xl overflow-hidden bg-surface-elevated flex items-center justify-center border border-border/50 relative">
+                        <div className="aspect-video sm:aspect-[16/9] rounded-2xl overflow-hidden bg-surface-elevated flex items-center justify-center border border-border/50 relative">
                             <video
                                 src="/vids/landing-vid.mp4"
                                 className="w-full h-full object-cover absolute inset-0"
@@ -103,6 +102,9 @@ const Landing = () => {
                                 loop
                                 muted
                                 playsInline
+                                poster="/images/video-poster.jpg"
+                                fetchPriority="high"
+                                preload="auto"
                             />
                         </div>
                     </motion.div>
@@ -110,14 +112,14 @@ const Landing = () => {
             </section>
 
             {/* Features Section */}
-            <section className="py-24 bg-surface/20 px-6 relative">
+            <section className="py-20 sm:py-24 bg-surface/20 px-4 sm:px-6 relative">
                 <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold mb-4">Everything You Need to Learn</h2>
-                        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">Simple tools to make learning fast, easy, and fun.</p>
+                    <div className="text-center mb-12 sm:mb-16">
+                        <h2 className="text-3xl sm:text-4xl font-bold mb-4">Everything You Need to Learn</h2>
+                        <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto">Simple tools to make learning fast, easy, and fun.</p>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {/* Feature 1 */}
                         <motion.div
                             className="bg-surface/50 backdrop-blur-sm border border-border/50 p-8 rounded-3xl hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm"
@@ -155,20 +157,20 @@ const Landing = () => {
             </section>
 
             {/* How It Works Section */}
-            <section className="py-32 px-6 sm:px-10 md:px-16 lg:px-24">
+            <section className="py-24 sm:py-32 px-4 sm:px-10 lg:px-24">
                 <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-24">
-                        <h2 className="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
-                        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">Start learning better in three easy steps.</p>
+                    <div className="text-center mb-16 sm:mb-24">
+                        <h2 className="text-3xl sm:text-4xl font-bold mb-4">How It Works</h2>
+                        <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto">Start learning better in three easy steps.</p>
                     </div>
 
-                    <div className="space-y-32">
+                    <div className="space-y-24 sm:space-y-32">
                         {/* Step 1 */}
-                        <div className="grid md:grid-cols-[2fr_3fr] gap-12 lg:gap-16 items-center">
-                            <div>
+                        <div className="grid md:grid-cols-[2fr_3fr] gap-8 sm:gap-12 lg:gap-16 items-center">
+                            <div className="text-center md:text-left">
                                 <div className="text-primary font-bold text-lg mb-2">Step 1</div>
-                                <h3 className="text-3xl font-bold mb-4">Upload Your PDF Files</h3>
-                                <p className="text-lg text-muted-foreground leading-relaxed">
+                                <h3 className="text-2xl sm:text-3xl font-bold mb-4">Upload Your PDF Files</h3>
+                                <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
                                     Just upload your PDF notes, books, or research papers into the app.
                                 </p>
                             </div>
@@ -178,37 +180,41 @@ const Landing = () => {
                                         src="/images/hiw1-.png"
                                         alt="Upload PDF"
                                         className="w-full h-full object-cover"
+                                        loading="lazy"
+                                        decoding="async"
                                     />
                                 </div>
                             </div>
                         </div>
 
                         {/* Step 2 */}
-                        <div className="grid md:grid-cols-[3fr_2fr] gap-12 lg:gap-16 items-center">
-                            <div className="order-2 md:order-1 w-full aspect-[2/1] rounded-2xl border border-border/50 bg-surface/50 backdrop-blur-sm shadow-card p-1.5 group hover:border-primary/30 transition-colors overflow-hidden">
+                        <div className="grid md:grid-cols-[3fr_2fr] gap-8 sm:gap-12 lg:gap-16 items-center">
+                            <div className="order-2 md:order-1 w-full aspect-[2/1] rounded-2xl border border-border/50 bg-surface/50 backdrop-blur-sm shadow-card p-1 sm:p-1.5 group hover:border-primary/30 transition-colors overflow-hidden">
                                 <div className="w-full h-full rounded-xl overflow-hidden relative shadow-inner">
                                     <img
                                         src="/images/hiw-2.png"
                                         alt="Read with AI"
                                         className="w-full h-full object-cover"
+                                        loading="lazy"
+                                        decoding="async"
                                     />
                                 </div>
                             </div>
-                            <div className="order-1 md:order-2">
+                            <div className="order-1 md:order-2 text-center md:text-left">
                                 <div className="text-primary font-bold text-lg mb-2">Step 2</div>
-                                <h3 className="text-3xl font-bold mb-4">Read Side-by-Side with AI</h3>
-                                <p className="text-lg text-muted-foreground leading-relaxed">
+                                <h3 className="text-2xl sm:text-3xl font-bold mb-4">Read Side-by-Side with AI</h3>
+                                <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
                                     Read your document normally on the left, while your intelligent AI companion sits ready on the right.
                                 </p>
                             </div>
                         </div>
 
                         {/* Step 3 */}
-                        <div className="grid md:grid-cols-[2fr_3fr] gap-12 lg:gap-16 items-center">
-                            <div>
+                        <div className="grid md:grid-cols-[2fr_3fr] gap-8 sm:gap-12 lg:gap-16 items-center">
+                            <div className="text-center md:text-left">
                                 <div className="text-primary font-bold text-lg mb-2">Step 3</div>
-                                <h3 className="text-3xl font-bold mb-4">Highlight for Explanations</h3>
-                                <p className="text-lg text-muted-foreground leading-relaxed">
+                                <h3 className="text-2xl sm:text-3xl font-bold mb-4">Highlight for Explanations</h3>
+                                <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
                                     Get explanations, examples, or related things with AI by just highlighting the text.
                                 </p>
                             </div>
@@ -218,6 +224,8 @@ const Landing = () => {
                                         src="/images/hiw-3.png"
                                         alt="Highlight for Explanations"
                                         className="w-full h-full object-cover"
+                                        loading="lazy"
+                                        decoding="async"
                                     />
                                 </div>
                             </div>
@@ -226,15 +234,15 @@ const Landing = () => {
                 </div>
             </section>
 
-            <section className="py-32 px-6 relative border-t border-border/30 bg-background">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-primary/10 blur-[130px] rounded-full pointer-events-none" />
+            <section className="py-24 sm:py-32 px-4 sm:px-6 relative border-t border-border/30 bg-background">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[800px] aspect-[8/3] bg-primary/10 blur-[100px] sm:blur-[130px] rounded-full pointer-events-none" />
 
                 <div className="max-w-3xl mx-auto text-center relative z-10 flex flex-col items-center">
-                    <h2 className="text-4xl md:text-5xl lg:text-5xl font-bold mb-6 tracking-tight">
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 tracking-tight leading-tight">
                         Start Learning Faster Today
                     </h2>
 
-                    <p className="text-xl text-muted-foreground mb-10 max-w-xl mx-auto leading-relaxed">
+                    <p className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-xl mx-auto leading-relaxed">
                         Join other students who have already made studying easier, faster, and much more enjoyable.
                     </p>
 
