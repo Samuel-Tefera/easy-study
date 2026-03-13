@@ -22,8 +22,8 @@ class AIInteractionRepository:
       document_id=document_id,
       interaction_type=interaction_type,
       action=action,
-      input_text=input_text,
-      response_text=response_text
+      input_text=input_text.replace("\x00", "") if input_text else input_text,
+      response_text=response_text.replace("\x00", "") if response_text else response_text
     )
 
     db.add(ai_interaction)

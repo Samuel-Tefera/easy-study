@@ -16,7 +16,7 @@ class ChunkRepository:
             Chunk(
                 document_id=document_id,
                 chunk_index=index,
-                text=text,
+                text=text.replace("\x00", "") if text else text,
             )
             for index, text in enumerate(chunks)
         ]
