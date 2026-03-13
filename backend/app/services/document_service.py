@@ -44,5 +44,8 @@ class DocumentService:
 
     @staticmethod
     def _clean_text(text: str) -> str:
+        # Remove NUL characters (PostgreSQL doesn't support them in string literals)
+        text = text.replace("\0", "")
+        text = text.replace("\x00", "")
         text = text.replace("\n\n", "\n")
         return text.strip()
