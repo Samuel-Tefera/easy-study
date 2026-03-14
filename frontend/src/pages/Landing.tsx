@@ -31,13 +31,13 @@ const Landing = () => {
                         <div className="w-8 h-8 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-glow">
                             <BookOpen className="w-5 h-5" />
                         </div>
-                        <span className="font-semibold tracking-tight text-lg hidden xs:block">Easy Study</span>
+                        <span className="font-semibold tracking-tight text-lg hidden sm:block">Easy Study</span>
                     </div>
                     <div className="flex items-center gap-2 sm:gap-4">
-                        <Button variant="ghost" size="sm" className="px-2 sm:px-4" onClick={handleAction}>
+                        <Button variant="ghost" size="sm" className="px-2 sm:px-4 text-xs sm:text-sm" onClick={handleAction}>
                             {isAuthenticated ? 'Dashboard' : 'Sign In'}
                         </Button>
-                        <Button size="sm" className="px-3 sm:px-6 h-9" onClick={handleAction}>
+                        <Button size="sm" className="px-3 sm:px-6 h-8 sm:h-9 text-xs sm:text-sm" onClick={handleAction}>
                             {isAuthenticated ? 'Go to Study' : 'Get Started'}
                         </Button>
                     </div>
@@ -53,17 +53,17 @@ const Landing = () => {
                         initial="initial"
                         animate="animate"
                         variants={fadeIn}
-                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary mb-8 border border-primary/20"
+                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary mb-6 sm:mb-8 border border-primary/20"
                     >
                         <Sparkles className="w-4 h-4" />
-                        <span className="text-sm font-medium">Your AI-Powered Study Companion</span>
+                        <span className="text-xs sm:text-sm font-medium">Your AI-Powered Study Companion</span>
                     </motion.div>
 
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.1 }}
-                        className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent leading-[1.1]"
+                        className="text-3xl xs:text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight mb-6 sm:mb-8 bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent leading-[1.1]"
                     >
                         Master Your Studies <br className="hidden sm:block" /> with AI
                     </motion.h1>
@@ -72,7 +72,7 @@ const Landing = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.2 }}
-                        className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 px-2"
+                        className="text-sm xs:text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 sm:mb-10 px-2"
                     >
                         Upload your PDFs, textbooks, and notes. Ask questions, get instant explanations, and track your progress effortlessly in a beautiful workspace.
                     </motion.p>
@@ -83,7 +83,7 @@ const Landing = () => {
                         transition={{ duration: 0.6, delay: 0.3 }}
                         className="flex items-center justify-center gap-4"
                     >
-                        <Button size="lg" className="h-12 px-8 text-base" onClick={handleAction} icon={<ArrowRight className="w-4 h-4" />}>
+                        <Button size="lg" className="h-10 sm:h-12 px-6 sm:px-8 text-sm sm:text-base" onClick={handleAction} icon={<ArrowRight className="w-4 h-4" />}>
                             {isAuthenticated ? 'Continue Studying' : 'Start Studying Now'}
                         </Button>
                     </motion.div>
@@ -115,62 +115,62 @@ const Landing = () => {
             <section className="py-20 sm:py-24 bg-surface/20 px-4 sm:px-6 relative">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-12 sm:mb-16">
-                        <h2 className="text-3xl sm:text-4xl font-bold mb-4">Everything You Need to Learn</h2>
-                        <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto">Simple tools to make learning fast, easy, and fun.</p>
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">Everything You Need to Learn</h2>
+                        <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-2xl mx-auto">Simple tools to make learning fast, easy, and fun.</p>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {/* Feature 1 */}
                         <motion.div
-                            className="bg-surface/50 backdrop-blur-sm border border-border/50 p-8 rounded-3xl hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm"
+                            className="bg-surface/50 backdrop-blur-sm border border-border/50 p-6 sm:p-8 rounded-3xl hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm"
                         >
-                            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary flex items-center justify-center mb-6 shadow-inner">
-                                <FileText className="w-7 h-7" />
+                            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary flex items-center justify-center mb-5 sm:mb-6 shadow-inner">
+                                <FileText className="w-6 h-6 sm:w-7 sm:h-7" />
                             </div>
-                            <h3 className="text-xl font-bold mb-3 tracking-tight">Fast PDF Reading</h3>
-                            <p className="text-muted-foreground leading-relaxed">Instantly open large files and books. We make it easy to find exactly what you are looking for without delays.</p>
+                            <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 tracking-tight">Fast PDF Reading</h3>
+                            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">Instantly open large files and books. We make it easy to find exactly what you are looking for without delays.</p>
                         </motion.div>
 
                         {/* Feature 2 */}
                         <motion.div
-                            className="bg-surface/50 backdrop-blur-sm border border-border/50 p-8 rounded-3xl hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm"
+                            className="bg-surface/50 backdrop-blur-sm border border-border/50 p-6 sm:p-8 rounded-3xl hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm"
                         >
-                            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary flex items-center justify-center mb-6 shadow-inner">
-                                <BrainCircuit className="w-7 h-7" />
+                            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary flex items-center justify-center mb-5 sm:mb-6 shadow-inner">
+                                <BrainCircuit className="w-6 h-6 sm:w-7 sm:h-7" />
                             </div>
-                            <h3 className="text-xl font-bold mb-3 tracking-tight">Smart AI Buddy</h3>
-                            <p className="text-muted-foreground leading-relaxed">Ask any question while you read. Get quick answers and simple explanations right next to your notes.</p>
+                            <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 tracking-tight">Smart AI Buddy</h3>
+                            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">Ask any question while you read. Get quick answers and simple explanations right next to your notes.</p>
                         </motion.div>
 
                         {/* Feature 3 */}
                         <motion.div
-                            className="bg-surface/50 backdrop-blur-sm border border-border/50 p-8 rounded-3xl hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm"
+                            className="bg-surface/50 backdrop-blur-sm border border-border/50 p-6 sm:p-8 rounded-3xl hover:border-primary/30 hover:bg-primary/5 transition-all shadow-sm"
                         >
-                            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary flex items-center justify-center mb-6 shadow-inner">
-                                <LineChart className="w-7 h-7" />
+                            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary flex items-center justify-center mb-5 sm:mb-6 shadow-inner">
+                                <LineChart className="w-6 h-6 sm:w-7 sm:h-7" />
                             </div>
-                            <h3 className="text-xl font-bold mb-3 tracking-tight">Pick Up Where You Left</h3>
-                            <p className="text-muted-foreground leading-relaxed">We save your work automatically. Open your dashboard and jump right back into your study session quickly.</p>
+                            <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 tracking-tight">Pick Up Where You Left</h3>
+                            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">We save your work automatically. Open your dashboard and jump right back into your session quickly.</p>
                         </motion.div>
                     </div>
                 </div>
             </section>
 
             {/* How It Works Section */}
-            <section className="py-24 sm:py-32 px-4 sm:px-10 lg:px-24">
+            <section className="py-20 sm:py-24 lg:py-32 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16 sm:mb-24">
-                        <h2 className="text-3xl sm:text-4xl font-bold mb-4">How It Works</h2>
-                        <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto">Start learning better in three easy steps.</p>
+                    <div className="text-center mb-16 sm:mb-20">
+                        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6">How It Works</h2>
+                        <p className="text-muted-foreground text-sm sm:text-base lg:text-lg max-w-2xl mx-auto">Start learning better in three easy steps.</p>
                     </div>
 
-                    <div className="space-y-24 sm:space-y-32">
+                    <div className="space-y-20 sm:space-y-24">
                         {/* Step 1 */}
                         <div className="grid md:grid-cols-[2fr_3fr] gap-8 sm:gap-12 lg:gap-16 items-center">
                             <div className="text-center md:text-left">
-                                <div className="text-primary font-bold text-lg mb-2">Step 1</div>
-                                <h3 className="text-2xl sm:text-3xl font-bold mb-4">Upload Your PDF Files</h3>
-                                <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
+                                <div className="text-primary font-bold text-base sm:text-lg mb-1 sm:mb-2">Step 1</div>
+                                <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 sm:mb-4">Upload Your PDF Files</h3>
+                                <p className="text-sm sm:text-base lg:text-lg text-muted-foreground leading-relaxed">
                                     Just upload your PDF notes, books, or research papers into the app.
                                 </p>
                             </div>
@@ -201,9 +201,9 @@ const Landing = () => {
                                 </div>
                             </div>
                             <div className="order-1 md:order-2 text-center md:text-left">
-                                <div className="text-primary font-bold text-lg mb-2">Step 2</div>
-                                <h3 className="text-2xl sm:text-3xl font-bold mb-4">Read Side-by-Side with AI</h3>
-                                <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
+                                <div className="text-primary font-bold text-base sm:text-lg mb-1 sm:mb-2">Step 2</div>
+                                <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 sm:mb-4">Read Side-by-Side with AI</h3>
+                                <p className="text-sm sm:text-base lg:text-lg text-muted-foreground leading-relaxed">
                                     Read your document normally on the left, while your intelligent AI companion sits ready on the right.
                                 </p>
                             </div>
@@ -212,9 +212,9 @@ const Landing = () => {
                         {/* Step 3 */}
                         <div className="grid md:grid-cols-[2fr_3fr] gap-8 sm:gap-12 lg:gap-16 items-center">
                             <div className="text-center md:text-left">
-                                <div className="text-primary font-bold text-lg mb-2">Step 3</div>
-                                <h3 className="text-2xl sm:text-3xl font-bold mb-4">Highlight for Explanations</h3>
-                                <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
+                                <div className="text-primary font-bold text-base sm:text-lg mb-1 sm:mb-2">Step 3</div>
+                                <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 sm:mb-4">Highlight for Explanations</h3>
+                                <p className="text-sm sm:text-base lg:text-lg text-muted-foreground leading-relaxed">
                                     Get explanations, examples, or related things with AI by just highlighting the text.
                                 </p>
                             </div>
@@ -234,22 +234,22 @@ const Landing = () => {
                 </div>
             </section>
 
-            <section className="py-24 sm:py-32 px-4 sm:px-6 relative border-t border-border/30 bg-background">
+            <section className="py-20 sm:py-24 lg:py-32 px-4 sm:px-6 relative border-t border-border/30 bg-background">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[800px] aspect-[8/3] bg-primary/10 blur-[100px] sm:blur-[130px] rounded-full pointer-events-none" />
 
                 <div className="max-w-3xl mx-auto text-center relative z-10 flex flex-col items-center">
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 tracking-tight leading-tight">
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 sm:mb-8 tracking-tight leading-tight">
                         Start Learning Faster Today
                     </h2>
 
-                    <p className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-xl mx-auto leading-relaxed">
+                    <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-10 sm:mb-12 max-w-xl mx-auto leading-relaxed">
                         Join other students who have already made studying easier, faster, and much more enjoyable.
                     </p>
 
                     <div className="flex justify-center">
                         <Button
                             size="lg"
-                            className="h-14 px-8 text-base shadow-glow hover:-translate-y-1 transition-transform duration-300"
+                            className="h-12 sm:h-14 px-6 sm:px-8 text-sm sm:text-base shadow-glow hover:-translate-y-1 transition-transform duration-300"
                             onClick={handleAction}
                             icon={<ArrowRight className="w-4 h-4" />}
                         >
