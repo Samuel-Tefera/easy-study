@@ -103,7 +103,6 @@ const Landing = () => {
                                 muted
                                 playsInline
                                 poster="/images/video-poster.jpg"
-                                fetchPriority="high"
                                 preload="auto"
                             />
                         </div>
