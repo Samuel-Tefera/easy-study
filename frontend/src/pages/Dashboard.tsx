@@ -84,22 +84,24 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* ── Actions Bar ── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
-        <div className="w-full sm:w-72">
-          <Input
-            placeholder="Search documents…"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            icon={<Search className="w-4 h-4" />}
-          />
+      {documents.length > 0 && (
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+          <div className="w-full sm:w-72">
+            <Input
+              placeholder="Search documents…"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              icon={<Search className="w-4 h-4" />}
+            />
+          </div>
+          <Button
+            onClick={() => setUploadModalOpen(true)}
+            icon={<Plus className="w-4 h-4" />}
+          >
+            Upload Document
+          </Button>
         </div>
-        <Button
-          onClick={() => setUploadModalOpen(true)}
-          icon={<Plus className="w-4 h-4" />}
-        >
-          Upload Document
-        </Button>
-      </div>
+      )}
 
       {/* ── Documents Grid ── */}
       {errorMsg ? (
