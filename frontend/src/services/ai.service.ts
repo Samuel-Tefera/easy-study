@@ -9,6 +9,7 @@ const ACTION_MAP: Record<string, string> = {
   example: 'example',
   analogy: 'analogy',
   acronym: 'expand_acronym',
+  question: 'answer_question',
 };
 
 /**
