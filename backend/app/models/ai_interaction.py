@@ -21,6 +21,7 @@ class AIActionType(enum.Enum):
   analogy = "analogy"
   example = "example"
   expand_acronym = "expand_acronym"
+  answer_question = "answer_question"
 
 
 class AIInteraction(Base):
