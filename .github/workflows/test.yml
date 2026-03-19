@@ -25,6 +25,7 @@ jobs:
     - name: Run Schema Migrations and Tests
       env:
         ENV_FILE: ".env"
+        PYTHONPATH: "."
         DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
         SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.TEST_SUPABASE_KEY }}
