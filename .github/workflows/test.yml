@@ -1,0 +1,43 @@
+name: Backend Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r backend/requirements.txt
+
+    - name: Run Schema Migrations and Tests
+      env:
+        ENV_FILE: ".env"
+        PYTHONPATH: "backend"
+        DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+        SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.TEST_SUPABASE_KEY }}
+        SUPABASE_JWT_SECRET: ${{ secrets.TEST_SUPABASE_JWT_SECRET }}
+        # Default mock values for other keys
+        HF_API_URL: "https://router.huggingface.co/hf-inference/models/sentence-transformers/all-MiniLM-L6-v2/pipeline/feature-extraction"
+        HF_API_KEY: "mock"
+        LLM_API_URL: "https://api.groq.com/openai/v1/chat/completions"
+        LLM_API_KEY: "mock"
+        LLM_MODEL: "mock"
+      run: |
+        cd backend
+        export PYTHONPATH=$PYTHONPATH:.
+        alembic upgrade head
+        pytest app/tests/
