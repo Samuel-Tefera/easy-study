@@ -12,8 +12,12 @@ RUN npm install
 # Copy source code
 COPY . .
 
+# Build arguments
+ARG VITE_MODE=production
+ENV VITE_MODE=$VITE_MODE
+
 # Build the application
-RUN npm run build
+RUN npm run build -- --mode $VITE_MODE
 
 # Stage 2: Serve the application with Nginx
 FROM nginx:alpine
