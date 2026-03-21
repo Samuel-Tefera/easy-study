@@ -19,16 +19,19 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    # Create Enum types
-    # Note: Using sa.Enum in create_table will automatically create the type if it doesn't exist,
-    # but for PostgreSQL it's often better to create it explicitly if we want to be safe.
+    # Safely create enum types if they don't exist
+    op.execute("DO $$ BEGIN CREATE TYPE ai_interaction_type AS ENUM ('highlight', 'question', 'summary', 'quiz'); EXCEPTION WHEN duplicate_object THEN null; END $$;")
+    op.execute("DO $$ BEGIN CREATE TYPE ai_action_type AS ENUM ('explain_simple', 'define', 'analogy', 'example', 'expand_acronym'); EXCEPTION WHEN duplicate_object THEN null; END $$;")
+
+    # Add new value 'answer_question' to ai_action_type if it doesn't already exist
+    op.execute("ALTER TYPE ai_action_type ADD VALUE IF NOT EXISTS 'answer_question'")
 
     op.create_table('ai_interactions',
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('user_id', sa.UUID(), nullable=False),
     sa.Column('document_id', sa.UUID(), nullable=False),
-    sa.Column('interaction_type', sa.Enum('highlight', 'question', 'summary', 'quiz', name='aiinteractiontype'), nullable=False),
-    sa.Column('action', sa.Enum('explain_simple', 'define', 'analogy', 'example', 'expand_acronym', 'answer_question', name='aiactiontype'), nullable=False),
+    sa.Column('interaction_type', sa.Enum('highlight', 'question', 'summary', 'quiz', name='ai_interaction_type'), nullable=False),
+    sa.Column('action', sa.Enum('explain_simple', 'define', 'analogy', 'example', 'expand_acronym', 'answer_question', name='ai_action_type'), nullable=False),
     sa.Column('input_text', sa.Text(), nullable=False),
     sa.Column('response_text', sa.Text(), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -49,6 +52,5 @@ def downgrade() -> None:
     op.drop_table('ai_interactions')
 
     # Drop types
-    # Note: Be careful with dropping types if they are used elsewhere, but here they are specific to this table.
-    sa.Enum(name='aiinteractiontype').drop(op.get_bind())
-    sa.Enum(name='aiactiontype').drop(op.get_bind())
+    sa.Enum(name='ai_interaction_type').drop(op.get_bind())
+    sa.Enum(name='ai_action_type').drop(op.get_bind())
