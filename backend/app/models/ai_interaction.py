@@ -50,12 +50,12 @@ class AIInteraction(Base):
     )
 
   interaction_type = Column(
-    Enum(AIInteractionType),
+    Enum(AIInteractionType, name="ai_interaction_type", create_type=False),
     nullable=False
   )
 
   action = Column(
-    Enum(AIActionType),
+    Enum(AIActionType, name="ai_action_type", create_type=False),
     nullable=False
   )
 
