@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
 import { aiActions, type ActionKey } from './constants';
-import { useFloating, shift, flip, offset, autoUpdate } from '@floating-ui/react';
+import { useFloating, shift, flip, offset, autoUpdate, inline } from '@floating-ui/react';
 
 interface FloatingMenuProps {
   virtualElement: any;
@@ -15,9 +15,10 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({ virtualElement, onAc
       reference: virtualElement,
     },
     middleware: [
+      inline(),
       offset(8),
       flip({ fallbackPlacements: ['top-start', 'bottom-end', 'top-end'] }),
-      shift({ padding: 16 })
+      shift({ padding: 16, crossAxis: true })
     ],
     whileElementsMounted: autoUpdate,
   });
