@@ -1,18 +1,34 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
 import { aiActions, type ActionKey } from './constants';
+import { useFloating, shift, flip, offset, autoUpdate } from '@floating-ui/react';
 
 interface FloatingMenuProps {
-  x: number;
-  y: number;
+  virtualElement: any;
   onAction: (action: ActionKey) => void;
 }
 
-export const FloatingMenu: React.FC<FloatingMenuProps> = ({ x, y, onAction }) => {
+export const FloatingMenu: React.FC<FloatingMenuProps> = ({ virtualElement, onAction }) => {
+  const { refs, floatingStyles } = useFloating({
+    placement: 'bottom-start',
+    elements: {
+      reference: virtualElement,
+    },
+    middleware: [
+      offset(8),
+      flip({ fallbackPlacements: ['top-start', 'bottom-end', 'top-end'] }),
+      shift({ padding: 16 })
+    ],
+    whileElementsMounted: autoUpdate,
+  });
+
+  if (!virtualElement) return null;
+
   return (
     <div
+      ref={refs.setFloating}
+      style={floatingStyles}
       className="fixed z-50 animate-in fade-in zoom-in duration-200"
-      style={{ left: x, top: y }}
     >
       <div className="flex flex-col gap-1 p-2 bg-surface-overlay/95 border border-border/50 rounded-2xl shadow-modal backdrop-blur-xl min-w-[160px]">
         {aiActions.map((action) => (
@@ -37,3 +53,4 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({ x, y, onAction }) =>
     </div>
   );
 };
+
