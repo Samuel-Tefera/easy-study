@@ -125,7 +125,7 @@ const StudyRoom: React.FC = () => {
   }, [id]);
 
   /* ── Floating menu state ── */
-  const [menuPosition, setMenuPosition] = useState<{ x: number; y: number } | null>(null);
+  const [virtualElement, setVirtualElement] = useState<any>(null);
   const [pendingText, setPendingText] = useState<string | null>(null);
 
   /* ── Panel width state (RAF‑throttled drag) ── */
@@ -173,19 +173,24 @@ const StudyRoom: React.FC = () => {
 
   /* ── Text selection handler ── */
   const handleMouseUp = useCallback(() => {
-    const selection = window.getSelection();
-    const text = selection?.toString().trim();
+    // Small timeout ensures selection is fully resolved and allows dismissing
+    setTimeout(() => {
+      const selection = window.getSelection();
+      const text = selection?.toString().trim();
 
-    if (text && text.length > 0) {
-      const range = selection!.getRangeAt(0);
-      const rect = range.getBoundingClientRect();
-
-      const menuX = Math.max(8, rect.left + rect.width / 2 - 200);
-      const menuY = rect.bottom + 8;
-
-      setPendingText(text);
-      setMenuPosition({ x: menuX, y: menuY });
-    }
+      if (text && text.length > 0) {
+        // Deep copy the range so it doesn't get messed up when selection changes subtly
+        const range = selection!.getRangeAt(0).cloneRange();
+        setPendingText(text);
+        setVirtualElement({
+          getBoundingClientRect: () => range.getBoundingClientRect(),
+          getClientRects: () => range.getClientRects()
+        });
+      } else {
+        setPendingText(null);
+        setVirtualElement(null);
+      }
+    }, 10);
   }, []);
 
   /* ── Click-outside to dismiss menu ── */
@@ -193,15 +198,15 @@ const StudyRoom: React.FC = () => {
     function handleClickOutside(e: MouseEvent) {
       const target = e.target as HTMLElement;
       if (target.closest('[class*="animate-in"]')) return;
-      setMenuPosition(null);
+      setVirtualElement(null);
       setPendingText(null);
     }
 
-    if (menuPosition) {
+    if (virtualElement) {
       document.addEventListener('mousedown', handleClickOutside);
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }
-  }, [menuPosition]);
+  }, [virtualElement]);
 
   /* ── Handle action click ── */
   async function handleAction(action: ActionKey) {
@@ -217,7 +222,7 @@ const StudyRoom: React.FC = () => {
     };
 
     setMessages((prev) => [...prev, userMessage]);
-    setMenuPosition(null);
+    setVirtualElement(null);
     setPendingText(null);
     setIsTyping(true);
 
@@ -458,10 +463,9 @@ const StudyRoom: React.FC = () => {
       </div>
 
       {/* ── Floating Action Menu ── */}
-      {menuPosition && pendingText && (
+      {virtualElement && pendingText && (
         <FloatingMenu
-          x={menuPosition.x}
-          y={menuPosition.y}
+          virtualElement={virtualElement}
           onAction={handleAction}
         />
       )}
