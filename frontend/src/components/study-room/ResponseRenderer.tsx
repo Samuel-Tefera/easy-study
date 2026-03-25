@@ -8,8 +8,6 @@ interface ResponseRendererProps {
 }
 
 export const ResponseRenderer: React.FC<ResponseRendererProps> = ({ content, isTyping }) => {
-  const contentWithCursor = isTyping ? content + ' `_cursor_`' : content;
-
   return (
     <div className="prose prose-sm dark:prose-invert max-w-none text-[15px] text-foreground/90 leading-relaxed marker:text-primary">
       <ReactMarkdown
@@ -30,9 +28,6 @@ export const ResponseRenderer: React.FC<ResponseRendererProps> = ({ content, isT
           ),
           h4: ({ node, ...props }) => <h4 className="text-base font-bold mt-4 mb-2 text-foreground" {...props} />,
           code: ({ node, inline, className, children, ...props }: any) => {
-            if (children === '_cursor_') {
-              return <span className="inline-block w-1.5 h-4 ml-1 bg-primary/60 animate-pulse align-middle" />;
-            }
             return inline ? (
               <code className="bg-muted/80 px-1.5 py-0.5 rounded text-[13px] font-mono text-foreground" {...props}>
                 {children}
@@ -48,7 +43,7 @@ export const ResponseRenderer: React.FC<ResponseRendererProps> = ({ content, isT
           )
         }}
       >
-        {contentWithCursor}
+        {content}
       </ReactMarkdown>
     </div>
   );
