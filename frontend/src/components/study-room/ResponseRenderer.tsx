@@ -9,7 +9,7 @@ interface ResponseRendererProps {
 
 export const ResponseRenderer: React.FC<ResponseRendererProps> = ({ content }) => {
   return (
-    <div className="prose prose-sm dark:prose-invert max-w-none text-[15px] text-foreground/90 leading-relaxed marker:text-primary">
+    <div className="max-w-none text-[15px] text-foreground/90 leading-relaxed marker:text-primary">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
