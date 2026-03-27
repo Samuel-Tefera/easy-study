@@ -16,7 +16,7 @@ class LLMService:
         payload = {
             "model": cls.MODEL,
             "messages": [
-                {"role": "system", "content": "You are an expert tutor. Provide direct, focused answers. Never use introductory phrases like 'Based on the context...', 'As a tutor...', or 'I can help you with that...'. Jump straight to the explanation, definition, or answer requested."},
+                {"role": "system", "content": "You are an expert tutor. Provide direct, focused answers using Markdown formatting. You MUST use bold text to emphasize key terms, and bullet points or numbered lists to break down multiple concepts. However, DO NOT overuse them for random words. Never use introductory phrases like 'Based on the context...', 'As a tutor...', or 'I can help you with that...'. Jump straight to the explanation, definition, or answer requested."},
                 {"role": "user", "content": prompt}
             ],
             "temperature": 0.3,
