@@ -32,6 +32,37 @@ class LLMService:
 
         response.raise_for_status()
 
-        data = response.json()
+        return data.get("choices", [{}])[0].get("message", {}).get("content", "")
 
+    @classmethod
+    def generate_summary(cls, text: str) -> str:
+        system_prompt = (
+            "You are an expert tutor. Provide a comprehensive, structured, and interactive summary of the provided text. "
+            "Use Markdown formatting, bold key terms, use bullet points, and clear headings. "
+            "Ensure everything a user needs to know to ace an exam on this topic is included. Be concise to save tokens but highly informative."
+        )
+
+        # Limiting input text length to avoid excessive token usage
+        max_chars = 120000
+        truncated_text = text[:max_chars] if len(text) > max_chars else text
+
+        payload = {
+            "model": cls.MODEL,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f"Summarize this document comprehensively into key points:\n\n{truncated_text}"}
+            ],
+            "temperature": 0.3,
+            "max_tokens": 1500
+        }
+
+        response = requests.post(
+            cls.API_URL,
+            headers=cls.HEADERS,
+            json=payload,
+            timeout=180
+        )
+
+        response.raise_for_status()
+        data = response.json()
         return data.get("choices", [{}])[0].get("message", {}).get("content", "")
