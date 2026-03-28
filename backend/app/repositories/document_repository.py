@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 
 from app.models.document import Document
+from app.models.chunk import Chunk
 
 
 class DocumentRepository:
@@ -54,3 +55,18 @@ class DocumentRepository:
         db.delete(document)
         db.commit()
         return True
+
+    @staticmethod
+    def update_document_summary(db: Session, document_id: UUID, summary: str) -> None:
+        document = db.query(Document).filter(Document.id == document_id).first()
+
+        if not document:
+            raise ValueError(f"Document with id {document_id} not found")
+
+        document.summary = summary
+        db.commit()
+        db.refresh(document)
+
+    @staticmethod
+    def get_document_chunks(db: Session, document_id: UUID) -> list[Chunk]:
+        return db.query(Chunk).filter(Chunk.document_id == document_id).order_by(Chunk.chunk_index.asc()).all()
