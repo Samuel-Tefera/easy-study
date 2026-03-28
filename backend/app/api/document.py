@@ -99,9 +99,12 @@ def generate_document_summary_endpoint(
     if not document or document.user_id != user.id:
         raise HTTPException(status_code=404, detail="Document not found")
 
+    if document.summary:
+        return {"summary": document.summary, "message": "Summary already created"}
+
     try:
         summary = DocumentService.generate_document_summary(db, document_id)
-        return {"summary": summary}
+        return {"summary": summary, "message": "Summary generated successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -118,4 +121,4 @@ def get_document_summary_endpoint(
     if not document.summary:
         raise HTTPException(status_code=404, detail="Summary not generated yet")
 
-    return {"summary": document.summary}
+    return {"summary": document.summary, "message": "Summary retrieved from storage"}

@@ -17,3 +17,4 @@ class DocumentOut(BaseModel):
 
 class DocumentSummaryOut(BaseModel):
   summary: str
+  message: str | None = None
