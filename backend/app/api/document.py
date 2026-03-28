@@ -10,8 +10,9 @@ from app.db.database import get_db
 from app.utils.utils import get_page_count
 from app.core.deps import get_current_user
 from app.repositories.document_repository import DocumentRepository
-from app.schemas.document import DocumentOut
+from app.schemas.document import DocumentOut, DocumentSummaryOut
 from app.utils.utils import process_document_task
+from app.services.document_service import DocumentService
 
 
 router = APIRouter(prefix="/documents", tags=["document"])
@@ -88,3 +89,33 @@ def delete_document(
     if DocumentRepository.delete_document(db, document_id):
         return {"message": "Document and all related data deleted"}
 
+@router.post("/{document_id}/summary", response_model=DocumentSummaryOut)
+def generate_document_summary_endpoint(
+    document_id: UUID,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    document = DocumentRepository.get_document_by_id(db, document_id)
+    if not document or document.user_id != user.id:
+        raise HTTPException(status_code=404, detail="Document not found")
+
+    try:
+        summary = DocumentService.generate_document_summary(db, document_id)
+        return {"summary": summary}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/{document_id}/summary", response_model=DocumentSummaryOut)
+def get_document_summary_endpoint(
+    document_id: UUID,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    document = DocumentRepository.get_document_by_id(db, document_id)
+    if not document or document.user_id != user.id:
+        raise HTTPException(status_code=404, detail="Document not found")
+
+    if not document.summary:
+        raise HTTPException(status_code=404, detail="Summary not generated yet")
+
+    return {"summary": document.summary}
