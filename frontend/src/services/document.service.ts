@@ -9,6 +9,11 @@ export interface Document {
   user_id?: string;
 }
 
+export interface DocumentSummary {
+  summary: string;
+  message: string;
+}
+
 export const documentService = {
   getDocuments: async (): Promise<Document[]> => {
     const response = await api.get<Document[]>('/documents/');
@@ -34,5 +39,15 @@ export const documentService = {
 
   deleteDocument: async (documentId: string): Promise<void> => {
     await api.delete(`/documents/${documentId}`);
+  },
+
+  generateSummary: async (documentId: string): Promise<DocumentSummary> => {
+    const response = await api.post<DocumentSummary>(`/documents/${documentId}/summary`);
+    return response.data;
+  },
+
+  getSummary: async (documentId: string): Promise<DocumentSummary> => {
+    const response = await api.get<DocumentSummary>(`/documents/${documentId}/summary`);
+    return response.data;
   }
 };

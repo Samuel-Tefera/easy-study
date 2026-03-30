@@ -2,7 +2,7 @@ import uuid
 
 import enum
 
-from sqlalchemy import Column, ForeignKey, Index, Integer, String,  DateTime, Enum, func
+from sqlalchemy import Column, ForeignKey, Index, Integer, String, DateTime, Enum, func, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 
@@ -43,6 +43,8 @@ class Document(Base):
     default=DocumentStatus.processing,
     nullable=False
   )
+
+  summary = Column(Text, nullable=True)
 
   user = relationship("User", back_populates="documents")
   chunks = relationship("Chunk", back_populates="document", cascade="all, delete")

@@ -10,6 +10,11 @@ class DocumentOut(BaseModel):
   filename: str
   pages: int
   status: str
+  summary: str | None = None
   created_at: datetime
 
   model_config = ConfigDict(from_attributes=True)
+
+class DocumentSummaryOut(BaseModel):
+  summary: str
+  message: str | None = None

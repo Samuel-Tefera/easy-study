@@ -7,6 +7,7 @@ import {
   BookOpen,
   User,
   Bot,
+  FileText,
 } from 'lucide-react';
 import { Badge } from '../components/ui';
 import { cn } from '../lib/utils';
@@ -19,6 +20,7 @@ import { FloatingMenu } from '../components/study-room/FloatingMenu';
 import { aiActions, type ActionKey } from '../components/study-room/constants';
 import { ResponseRenderer } from '../components/study-room/ResponseRenderer';
 import { TypingEffect } from '../components/study-room/TypingEffect';
+import { DocumentSummaryView } from '../components/study-room/DocumentSummaryView';
 
 /* ── Configure PDF.js worker ── */
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -86,6 +88,9 @@ const StudyRoom: React.FC = () => {
       observer.disconnect();
     };
   }, []);
+
+  /* ── Right Panel Tab State ── */
+  const [activeTab, setActiveTab] = useState<'chat' | 'summary'>('chat');
 
   /* ── Chat state ── */
   const [messages, setMessages] = useState<Message[]>([]);
@@ -357,26 +362,47 @@ const StudyRoom: React.FC = () => {
         <div className="h-10 w-1 bg-border/80 rounded-full group-hover:bg-primary/80 transition-colors" />
       </div>
 
-      {/* ── Right Panel: AI Chat ── */}
+      {/* ── Right Panel: AI Chat & Summary ── */}
       <div className="flex flex-col flex-1 bg-surface min-w-0">
-        {/* Header */}
-        <div className="flex items-center justify-between h-14 px-6 border-b border-border/50 shrink-0 bg-surface/80 backdrop-blur-md">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10">
-              <Sparkles className="w-4 h-4 text-primary" />
-            </div>
-            <span className="text-sm font-bold text-foreground tracking-tight uppercase tracking-widest">
-              AI Tutor
-            </span>
-          </div>
-          <Badge variant="primary" className="text-[9px] px-2 py-0">LIVE</Badge>
+        {/* Header Tabs */}
+        <div className="flex items-center h-14 px-6 border-b border-border/50 shrink-0 bg-surface/80 backdrop-blur-md gap-8">
+          <button
+            onClick={() => setActiveTab('chat')}
+            className={cn(
+              "relative flex items-center gap-2 h-full text-sm font-bold tracking-tight uppercase transition-colors cursor-pointer group",
+              activeTab === 'chat' ? "text-primary" : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <Sparkles className={cn("w-4 h-4 transition-transform", activeTab !== 'chat' && "group-hover:scale-110")} />
+            AI Tutor
+            {activeTab === 'chat' && (
+              <span className="absolute bottom-0 left-0 right-0 border-b-2 border-dashed border-primary" />
+            )}
+          </button>
+
+          <button
+            onClick={() => setActiveTab('summary')}
+            className={cn(
+              "relative flex items-center gap-2 h-full text-sm font-bold tracking-tight uppercase transition-colors cursor-pointer group",
+              activeTab === 'summary' ? "text-primary" : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <FileText className={cn("w-4 h-4 transition-transform", activeTab !== 'summary' && "group-hover:scale-110")} />
+            Summary
+            {activeTab === 'summary' && (
+              <span className="absolute bottom-0 left-0 right-0 border-b-2 border-dashed border-primary" />
+            )}
+          </button>
         </div>
 
-        {/* Chat Area */}
-        <div
-          ref={aiPanelRef}
-          className="flex-1 overflow-y-auto px-6 py-6 space-y-8 scrollbar-hide"
-        >
+        {/* Content Area */}
+        {activeTab === 'chat' ? (
+          <>
+            {/* Chat Area */}
+            <div
+              ref={aiPanelRef}
+              className="flex-1 overflow-y-auto px-6 py-6 space-y-8 scrollbar-hide"
+            >
           {messages.length === 0 ? (
             /* ── Empty State ── */
             <div className="flex flex-col items-center justify-center h-full text-center max-w-[260px] mx-auto animate-in fade-in duration-700">
@@ -460,6 +486,12 @@ const StudyRoom: React.FC = () => {
             AI may make mistakes. Please verify important information.
           </p>
         </div>
+        </>
+        ) : (
+          <div className="flex-1 overflow-hidden">
+            {id && <DocumentSummaryView documentId={id} />}
+          </div>
+        )}
       </div>
 
       {/* ── Floating Action Menu ── */}
